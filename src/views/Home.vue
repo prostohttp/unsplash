@@ -36,7 +36,6 @@ const setImages = async () => {
 const scrollHandler = async () => {
   let documentHeight = document.body.scrollHeight;
   let currentScroll = window.scrollY + window.innerHeight;
-  // When the user is [modifier]px from the bottom, fire the event.
   if (currentScroll === documentHeight) {
     pageIndex.value = pageIndex.value + 1;
     await setImages();

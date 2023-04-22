@@ -1,6 +1,6 @@
 <script setup>
 import { useField } from "vee-validate";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import AppFeed from "@/components/AppFeed.vue";
 import { authRequest } from "@/api/unsplash.js";
 import { useRoute, useRouter } from "vue-router";
@@ -34,12 +34,12 @@ const onSubmit = () => {
 };
 const searchHandler = async () => {
   if (route.query.s) {
-    isLoading.value = true;
-    setLocalSearchList([]);
     try {
       const res = await api.search.getPhotos({
         query: route.query.s,
       });
+      isLoading.value = true;
+      setLocalSearchList([]);
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -55,15 +55,50 @@ const searchHandler = async () => {
     }
   }
 };
+const scrollHandler = async () => {
+  let documentHeight = document.body.scrollHeight;
+  let currentScroll = window.scrollY + window.innerHeight;
+  if (currentScroll === documentHeight) {
+    if (route.query.s) {
+      try {
+        const res = await api.search.getPhotos({
+          query: route.query.s,
+        });
+        isLoading.value = true;
+        if (res.errors) {
+          error.value = "Возникла ошибка";
+        } else if (res.response.results.length) {
+          setLocalSearchList([
+            ...localSearchList.value,
+            ...res.response.results,
+          ]);
+        } else {
+          error.value = "Ничего не найдено";
+        }
+        isLoading.value = false;
+      } catch (e) {
+        isLoading.value = false;
+        error.value = "Ошибка сети";
+        console.log(e);
+      }
+    }
+  }
+};
 // Hooks
 onMounted(async () => {
+  document.addEventListener("scroll", scrollHandler);
   searchValue.value = route.query.s;
   if (!localSearchList.value.length) {
     await searchHandler();
   }
   if (route.query.s) {
     setRouteQueryForHash(route.query.s);
+  } else {
+    setLocalSearchList([]);
   }
+});
+onUnmounted(async () => {
+  document.removeEventListener("scroll", scrollHandler);
 });
 watch(route, async () => {
   searchValue.value = route.query.s;
