@@ -18,7 +18,9 @@ const layout = computed(() => {
 });
 // Hooks
 onMounted(() => {
-  loading.value = false;
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
 });
 </script>
 
