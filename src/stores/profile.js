@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
-import { shallowRef } from "vue";
+import { ref } from "vue";
 
 export const useProfileStore = defineStore("profile", () => {
-  const userInfo = shallowRef({});
+  const userInfo = ref({});
   const setUser = (data) => {
     userInfo.value = data;
   };

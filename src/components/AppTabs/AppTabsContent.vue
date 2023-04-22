@@ -1,5 +1,5 @@
 <script setup></script>
 
 <template>
-  <div>Reels</div>
+  <div></div>
 </template>

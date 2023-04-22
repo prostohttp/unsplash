@@ -1,5 +1,4 @@
 <script setup>
-import { onBeforeMount } from "vue";
 import { storeToRefs } from "pinia";
 import logoSmall from "~/svg/logo-small.svg";
 import logoBig from "~/svg/logo-big.svg";
@@ -10,26 +9,30 @@ import messagesIcon from "~/svg/messages-icon.svg";
 import notificationsIcon from "~/svg/notifications-icon.svg";
 import reelsIcon from "~/svg/reels-icon.svg";
 import searchIcon from "~/svg/search-icon.svg";
-import { authRequest } from "@/api/unsplash.js";
+import userPlaceholder from "~/svg/user-placeholder.svg";
 import { useProfileStore } from "@/stores/profile.js";
+import { authRequest } from "@/api/unsplash.js";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 // Stores
 const profileStore = useProfileStore();
-const { userInfo } = storeToRefs(profileStore);
-const { setUser } = profileStore;
 // Vars
 const api = authRequest();
-
+const router = useRouter();
 // Handlers
 
 // Hooks
-
-onBeforeMount(async () => {
-  const res = await api.users.get({ username: "mikelecorleone" });
-  if (res.errors) {
-    console.log("Такого пользователя нет");
-  } else {
-    setUser(res.response);
+onMounted(async () => {
+  const username = localStorage.getItem("isAuth");
+  if (username) {
+    const res = await api.users.get({ username: username });
+    if (res.errors) {
+      localStorage.removeItem("isAuth");
+      await router.push({ name: "auth" });
+    } else {
+      profileStore.setUser(res.response);
+    }
   }
 });
 </script>
@@ -95,16 +98,27 @@ onBeforeMount(async () => {
       <span class="hidden mac:flex">Уведомления</span>
     </router-link>
     <router-link
-      v-if="userInfo.id"
-      :to="{ name: 'profile', params: { user: userInfo.id } }"
+      v-if="profileStore.userInfo.id"
+      :to="{
+        name: 'profile',
+        params: { user: profileStore.userInfo.username },
+      }"
       class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
     >
       <img
-        :src="userInfo.profile_image?.large"
+        :src="profileStore.userInfo.profile_image?.large"
         alt="logo"
         class="w-[24px] rounded-full"
       />
       <span class="hidden mac:flex">Профиль</span>
+    </router-link>
+    <router-link
+      v-else
+      :to="{ name: 'auth' }"
+      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
+    >
+      <img :src="userPlaceholder" alt="logo" class="w-[24px] rounded-full" />
+      <span class="hidden mac:flex">Войти</span>
     </router-link>
   </div>
 </template>

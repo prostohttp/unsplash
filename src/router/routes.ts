@@ -26,14 +26,6 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/auth",
-    component: () => import("../views/Auth.vue"),
-    name: "auth",
-    meta: {
-      layout: "Main",
-    },
-  },
-  {
     path: "/explore",
     component: () => import("../views/Explore.vue"),
     name: "explore",
@@ -74,11 +66,33 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user",
+    path: "/auth",
+    component: () => import("../views/Auth.vue"),
+    name: "auth",
+    meta: {
+      layout: "Main",
+    },
+    beforeEnter(to, from, next) {
+      if (localStorage.getItem("isAuth")) {
+        next({ name: "profile" });
+      } else {
+        next();
+      }
+    },
+  },
+  {
+    path: "/profile/:user?",
     component: () => import("../views/Profile.vue"),
     name: "profile",
     meta: {
       layout: "Main",
+    },
+    beforeEnter(to, from, next) {
+      if (!localStorage.getItem("isAuth")) {
+        next({ name: "auth" });
+      } else {
+        next();
+      }
     },
   },
   {

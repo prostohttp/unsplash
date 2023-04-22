@@ -55,9 +55,13 @@ const likeHandler = () => {
     </div>
     <div>
       <div class="mb-[15px] mt-[5px] flex">
-        <button @click="likeHandler" class="flex items-center justify-center">
+        <a
+          href=""
+          @click.prevent="likeHandler"
+          class="flex items-center justify-center"
+        >
           <img :src="likeIcon" alt="like" />
-        </button>
+        </a>
       </div>
       <div class="font-semibold">
         {{ item.likes }} {{ numWord(item.likes) }}

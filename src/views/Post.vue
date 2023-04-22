@@ -73,9 +73,12 @@ onBeforeMount(async () => {
     </div>
     <div class="border-b border-grey pb-[20px]">
       <div class="mb-[15px] mt-[5px] flex">
-        <button @click="likeHandler" class="flex items-center justify-center">
+        <a
+          @click.prevent="likeHandler"
+          class="flex items-center justify-center"
+        >
           <img :src="likeIcon" alt="like" />
-        </button>
+        </a>
       </div>
       <div class="font-semibold">
         {{ photo.likes }} {{ numWord(photo.likes) }}

@@ -6,6 +6,12 @@
 	body {
 		@apply min-w-[420px] subpixel-antialiased selection:bg-accent selection:text-white;
 	}
+	input[type="text"] {
+		@apply w-[268px] rounded-[8px] bg-[#efefef] py-[10px] pl-[25px] pr-[16px] text-[16px] text-[#000000] placeholder-[#737373] outline-none
+	}
+	button {
+		@apply text-center bg-accent text-white px-[40px] py-[10px] rounded-[8px]
+	}
 }
 
 @layer components {
