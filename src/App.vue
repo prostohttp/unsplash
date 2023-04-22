@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref, shallowRef } from "vue";
+import { computed, onMounted, ref, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import Main from "@/layouts/Main.vue";
 import logo from "~/svg/logo-big.svg";
@@ -16,15 +16,9 @@ const layout = computed(() => {
   });
   return layoutRef.value;
 });
-const loadingHandler = () => {
-  loading.value = false;
-};
 // Hooks
 onMounted(() => {
-  window.addEventListener("load", loadingHandler);
-});
-onUnmounted(() => {
-  window.removeEventListener("load", loadingHandler);
+  loading.value = false;
 });
 </script>
 

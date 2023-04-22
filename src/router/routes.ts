@@ -1,1 +1,92 @@
-export const routes = [];
+import { RouteRecordRaw } from "vue-router";
+
+export const routes: ReadonlyArray<RouteRecordRaw> = [
+  {
+    path: "/",
+    component: () => import("../views/Home.vue"),
+    name: "home",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/posts/:id",
+    component: () => import("../views/Post.vue"),
+    name: "post",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/search",
+    component: () => import("../views/Search.vue"),
+    name: "search",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/auth",
+    component: () => import("../views/Auth.vue"),
+    name: "auth",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/explore",
+    component: () => import("../views/Explore.vue"),
+    name: "explore",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/reels",
+    component: () => import("../views/Reels.vue"),
+    name: "reels",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/messages",
+    component: () => import("../views/Messages.vue"),
+    name: "messages",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/notifications",
+    component: () => import("../views/Notifications.vue"),
+    name: "notifications",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/create",
+    component: () => import("../views/Create.vue"),
+    name: "create",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/profile/:user",
+    component: () => import("../views/Profile.vue"),
+    name: "profile",
+    meta: {
+      layout: "Main",
+    },
+  },
+  {
+    path: "/:notFound(.*)*",
+    component: () => import("../views/NotFound.vue"),
+    name: "404",
+    meta: {
+      layout: "Main",
+    },
+  },
+];

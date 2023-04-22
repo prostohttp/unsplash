@@ -1,0 +1,104 @@
+<script setup>
+import { useRoute } from "vue-router";
+import { onBeforeMount, ref } from "vue";
+import { authRequest } from "@/api/unsplash.js";
+import likeIcon from "~/svg/notifications-icon.svg";
+import { numWord } from "@/helpers/functons.js";
+import { usePostStore } from "@/stores/post.js";
+import { storeToRefs } from "pinia";
+
+// Stores
+const postStore = usePostStore();
+const { routeNameForHash, routeQueryForHash } = storeToRefs(postStore);
+// Vars
+const route = useRoute();
+const api = authRequest();
+const photo = ref({});
+const error = ref("");
+const isLoading = ref(true);
+
+// Handlers
+const likeHandler = () => {
+  alert("Лайк");
+};
+// Hooks
+onBeforeMount(async () => {
+  const res = await api.photos.get({ photoId: route.params.id || "" });
+  if (res.errors) {
+    error.value = "Не найдена фотография";
+  } else {
+    photo.value = res.response;
+    isLoading.value = false;
+  }
+});
+</script>
+
+<template>
+  <h1 v-if="error">{{ error }}</h1>
+  <div v-else-if="isLoading">Загрузка...</div>
+  <div
+    v-else-if="photo.user"
+    class="mb-[12px] flex flex-col gap-[10px] py-[12px] text-[14px]"
+  >
+    <div class="mb-[8px] flex items-center gap-[10px]">
+      <div
+        class="flex h-[42px] w-[42px] items-center justify-center overflow-hidden rounded-full border-[2px] border-accent"
+      >
+        <a
+          :href="photo.user.links.html"
+          target="_blank"
+          class="border-[2px] border-white"
+        >
+          <img
+            :src="photo.user.profile_image.large"
+            :alt="photo.user.name"
+            class="h-[35px] w-[35px] rounded-full object-cover object-center"
+          />
+        </a>
+      </div>
+      <a :href="photo.user.links.html" target="_blank" class="font-semibold">
+        {{ photo.user.name }}
+      </a>
+      <span class="text-[#737373]">
+        {{ new Date(photo.created_at).toLocaleTimeString() }} |
+        {{ new Date(photo.created_at).toLocaleDateString() }}
+      </span>
+    </div>
+    <div class="overflow-hidden rounded-[3px]">
+      <img
+        :src="photo.urls.regular"
+        :alt="photo.alt_description"
+        class="w-auto"
+      />
+    </div>
+    <div class="border-b border-grey pb-[20px]">
+      <div class="mb-[15px] mt-[5px] flex">
+        <button @click="likeHandler" class="flex items-center justify-center">
+          <img :src="likeIcon" alt="like" />
+        </button>
+      </div>
+      <div class="font-semibold">
+        {{ photo.likes }} {{ numWord(photo.likes) }}
+      </div>
+    </div>
+    <router-link
+      v-if="routeQueryForHash"
+      :to="{
+        name: routeNameForHash,
+        query: { s: routeQueryForHash },
+        hash: `#${photo.id}`,
+      }"
+    >
+      Вернуться к ленте фотографий
+    </router-link>
+    <router-link
+      v-else
+      :to="{
+        name: routeNameForHash,
+        hash: `#${photo.id}`,
+      }"
+    >
+      Вернуться к ленте фотографий
+    </router-link>
+  </div>
+</template>
