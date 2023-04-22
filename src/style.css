@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	body {
+		@apply min-w-[420px] subpixel-antialiased selection:bg-accent selection:text-white;
+	}
+}
+
+@layer components {
+
+}
+
+@layer utilities {
+
+}
+
+.router-link-active span {
+	@apply font-bold
+}
