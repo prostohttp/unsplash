@@ -34,10 +34,6 @@ watch(route, (value) => {
     <form @submit.prevent="onSubmit" class="relative">
       <AppSearch v-model="searchValue" />
     </form>
-    <router-link to="/" custom v-slot="{ navigate }">
-      <button @click="navigate" role="link">
-        <img :src="notifIcon" alt="notifications" />
-      </button>
-    </router-link>
+    <img :src="notifIcon" alt="notifications" />
   </div>
 </template>

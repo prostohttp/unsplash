@@ -70,7 +70,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     component: () => import("../views/Auth.vue"),
     name: "auth",
     meta: {
-      layout: "Main",
+      layout: "FullWidth",
     },
     beforeEnter(to, from, next) {
       if (localStorage.getItem("isAuth")) {
@@ -81,11 +81,11 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user?",
+    path: "/profile/:user",
     component: () => import("../views/Profile.vue"),
     name: "profile",
     meta: {
-      layout: "Main",
+      layout: "FullWidth",
     },
     beforeEnter(to, from, next) {
       if (!localStorage.getItem("isAuth")) {

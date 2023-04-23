@@ -59,7 +59,7 @@ onBeforeMount(async () => {
       <a :href="photo.user.links.html" target="_blank" class="font-semibold">
         {{ photo.user.name }}
       </a>
-      <span class="text-[#737373]">
+      <span class="text-dark-grey">
         {{ new Date(photo.created_at).toLocaleTimeString() }} |
         {{ new Date(photo.created_at).toLocaleDateString() }}
       </span>

@@ -8,6 +8,7 @@ import AppSearch from "@/components/AppSearch.vue";
 import { usePostStore } from "@/stores/post.js";
 import { useSearchStore } from "@/stores/search.js";
 import { storeToRefs } from "pinia";
+import UserInfoBlock from "@/components/UserInfoBlock.vue";
 
 // Stores
 const postStore = usePostStore();
@@ -110,25 +111,32 @@ watch(route, async () => {
 </script>
 
 <template>
-  <div class="max-w-[700px]">
-    <form @submit.prevent="onSubmit" class="fixed top-[20px]">
-      <AppSearch v-model="searchValue" />
-    </form>
-    <div v-if="isLoading" class="mt-[50px] text-center text-[22px]">
-      Загрузка...
-    </div>
-    <AppFeed
-      v-else-if="localSearchList.length"
-      :feeds="localSearchList"
-      :route-name="route.name"
-      :route-query="route.query.s || null"
-      class="mt-[50px]"
-    />
+  <div class="flex iphone:gap-[50px]">
     <div
-      v-else-if="error && !isLoading"
-      class="mt-[50px] text-center text-[22px]"
+      class="pt-[12px] iphone:ml-[40px] iphone:min-w-[350px] ipad:min-w-[400px]"
     >
-      {{ error }}
+      <form @submit.prevent="onSubmit" class="relative hidden iphone:flex">
+        <AppSearch v-model="searchValue" class="w-full" />
+      </form>
+      <div v-if="isLoading" class="mt-[50px] text-center text-[22px]">
+        Загрузка...
+      </div>
+      <AppFeed
+        v-else-if="localSearchList.length"
+        :feeds="localSearchList"
+        :route-name="route.name"
+        :route-query="route.query.s || null"
+        class="mt-[50px]"
+      />
+      <div
+        v-else-if="error && !isLoading"
+        class="mt-[50px] text-center text-[22px]"
+      >
+        {{ error }}
+      </div>
+    </div>
+    <div class="relative mt-[12px] hidden flex-col iphone:flex">
+      <UserInfoBlock />
     </div>
   </div>
 </template>

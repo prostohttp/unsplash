@@ -1,6 +1,6 @@
 <script setup>
 import { useProfileStore } from "@/stores/profile.js";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 // Stores
@@ -11,7 +11,7 @@ const router = useRouter();
 // Handlers
 const logoutHandler = () => {
   localStorage.removeItem("isAuth");
-  profileStore.setUser({});
+  profileStore.setUser(null);
   router.push({ name: "auth" });
 };
 // Handlers
@@ -32,27 +32,29 @@ const logoutHandler = () => {
         Авторизоваться
       </router-link>
     </div>
-    <template v-else-if="profileStore.userInfo.name">
-      <div class="flex basis-4/12 justify-center">
+    <template v-else>
+      <div
+        class="mt-[20px] flex basis-5/12 justify-center iphone:mt-0 ipad:basis-2/12"
+      >
         <img
-          :src="profileStore.userInfo.profile_image.large"
-          :alt="profileStore.userInfo.name"
+          :src="profileStore.userInfo?.profile_image.large"
+          :alt="profileStore.userInfo?.name"
           class="rounded-full"
         />
       </div>
-      <div class="flex basis-8/12 flex-col gap-[10px]">
+      <div class="flex basis-7/12 flex-col gap-[10px] ipad:basis-10/12">
         <h1 class="text-center text-[22px] iphone:text-left">
-          {{ profileStore.userInfo.name }}
+          {{ profileStore.userInfo?.name }}
         </h1>
         <div>
           <a
-            :href="profileStore.userInfo.links.html"
+            :href="profileStore.userInfo?.links.html"
             target="_blank"
             class="underline underline-offset-4"
-            >Страница на сайте Unsplash
+            >Перейти на unsplash.com
           </a>
         </div>
-        <button @click="logoutHandler" class="mt-[30px] w-[250px]">
+        <button @click="logoutHandler" class="mt-[20px] w-[250px]">
           Выйти из аккаунта
         </button>
       </div>

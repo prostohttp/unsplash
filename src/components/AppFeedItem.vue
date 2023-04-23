@@ -40,7 +40,7 @@ const likeHandler = () => {
       <a :href="item.user.links.html" target="_blank" class="font-semibold">
         {{ item.user.username }}
       </a>
-      <span class="text-[#737373]">
+      <span class="text-dark-grey">
         {{ getDateDiff(new Date(), new Date(item.created_at)) }}
       </span>
     </div>

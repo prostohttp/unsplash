@@ -1,5 +1,4 @@
 <script setup>
-import { storeToRefs } from "pinia";
 import logoSmall from "~/svg/logo-small.svg";
 import logoBig from "~/svg/logo-big.svg";
 import homeIcon from "~/svg/home-icon.svg";
@@ -12,7 +11,7 @@ import searchIcon from "~/svg/search-icon.svg";
 import userPlaceholder from "~/svg/user-placeholder.svg";
 import { useProfileStore } from "@/stores/profile.js";
 import { authRequest } from "@/api/unsplash.js";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // Stores
@@ -98,7 +97,7 @@ onMounted(async () => {
       <span class="hidden mac:flex">Уведомления</span>
     </router-link>
     <router-link
-      v-if="profileStore.userInfo.id"
+      v-if="profileStore.userInfo"
       :to="{
         name: 'profile',
         params: { user: profileStore.userInfo.username },

@@ -15,10 +15,11 @@ const emit = defineEmits(["update:model-value"]);
 
 <template>
   <input
+    v-bind="$attrs"
     :value="modelValue"
     @input="emit('update:model-value', $event.target.value)"
     placeholder="Поиск"
-    class="peer h-[36px] w-[268px] rounded-[8px] bg-[#efefef] py-[3px] pl-[45px] pr-[16px] text-[16px] text-[#000000] placeholder-[#737373] outline-none transition-all duration-75 focus:pl-[16px]"
+    class="placeholder-dark-grey peer h-[36px] rounded-[8px] bg-[#efefef] py-[3px] pl-[45px] pr-[16px] text-[16px] text-[#000000] outline-none transition-all duration-75 focus:pl-[16px]"
   />
   <img
     :src="mobileSearch"

@@ -3,9 +3,10 @@ import { computed, onMounted, ref, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import Main from "@/layouts/Main.vue";
 import logo from "~/svg/logo-big.svg";
+import FullWidth from "@/layouts/FullWidth.vue";
 
 // vars
-const layouts = [Main];
+const layouts = [Main, FullWidth];
 const layoutRef = shallowRef(Main);
 const route = useRoute();
 const loading = ref(true);
@@ -25,27 +26,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <transition name="fade">
-    <div
-      class="flex h-screen w-screen items-center justify-center"
-      v-if="loading"
-    >
-      <img :src="logo" alt="Россграм" class="h-[60px]" />
-    </div>
-    <component :is="layout" v-else>
-      <router-view />
-    </component>
-  </transition>
+  <div
+    class="flex h-screen w-screen items-center justify-center"
+    v-if="loading"
+  >
+    <img :src="logo" alt="Россграм" class="h-[60px]" />
+  </div>
+  <component :is="layout" v-else>
+    <router-view />
+  </component>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
