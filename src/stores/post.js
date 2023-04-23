@@ -9,6 +9,7 @@ export const usePostStore = defineStore("post", () => {
     posts.value = feed;
   };
   const pageIndex = ref(1);
+  const pageSearchIndex = ref(1);
   const setRouteNameForHash = (name) => {
     routeNameForHash.value = name;
   };
@@ -23,5 +24,6 @@ export const usePostStore = defineStore("post", () => {
     setRouteNameForHash,
     setRouteQueryForHash,
     pageIndex,
+    pageSearchIndex,
   };
 });

@@ -11,7 +11,7 @@ const { item } = defineProps({
 });
 // Handlers
 const likeHandler = () => {
-  alert("лайк");
+  alert("Здесь мог быть твой лайк");
 };
 // Hooks
 </script>

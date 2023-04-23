@@ -22,10 +22,13 @@ const setImages = async () => {
     const res = await api.photos.list({ page: postStore.pageIndex });
     if (res.errors) {
       error.value = "Ошибка при загрузке ленты фотографий";
-    } else {
+    } else if (res.response.results.length) {
       posts.value = [...posts.value, ...res.response.results];
       postStore.setPosts(posts.value);
       isLoading.value = false;
+    } else {
+      console.log("Больше картинок нет");
+      document.removeEventListener("scroll", scrollHandler);
     }
   } catch (e) {
     console.log(e);
@@ -60,7 +63,7 @@ onUnmounted(async () => {
 
 <template>
   <div class="flex iphone:gap-[50px]">
-    <div class="iphone:ml-[40px]">
+    <div class="min-w-[400px]">
       <h2 class="text-center text-[22px]" v-if="error">{{ error }}</h2>
       <div class="text-center text-[22px]" v-else-if="isLoading">
         Загрузка...

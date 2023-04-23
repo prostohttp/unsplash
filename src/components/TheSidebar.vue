@@ -1,24 +1,32 @@
 <script setup>
 import logoSmall from "~/svg/logo-small.svg";
 import logoBig from "~/svg/logo-big.svg";
-import homeIcon from "~/svg/home-icon.svg";
-import createIcon from "~/svg/create-icon.svg";
-import exploreIcon from "~/svg/explore-icon.svg";
-import messagesIcon from "~/svg/messages-icon.svg";
-import notificationsIcon from "~/svg/notifications-icon.svg";
-import reelsIcon from "~/svg/reels-icon.svg";
-import searchIcon from "~/svg/search-icon.svg";
 import userPlaceholder from "~/svg/user-placeholder.svg";
 import { useProfileStore } from "@/stores/profile.js";
 import { authRequest } from "@/api/unsplash.js";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import HomeActive from "@/components/icons/HomeActive.vue";
+import Home from "@/components/icons/Home.vue";
+import SearchActive from "@/components/icons/SearchActive.vue";
+import Search from "@/components/icons/Search.vue";
+import ExploreActive from "@/components/icons/ExploreActive.vue";
+import Explore from "@/components/icons/Explore.vue";
+import ReelsActive from "@/components/icons/ReelsActive.vue";
+import Reels from "@/components/icons/Reels.vue";
+import CreateActive from "@/components/icons/CreateActive.vue";
+import Create from "@/components/icons/Create.vue";
+import MessagesActive from "@/components/icons/MessagesActive.vue";
+import Messages from "@/components/icons/Messages.vue";
+import NotificationsActive from "@/components/icons/NotificationsActive.vue";
+import Notifications from "@/components/icons/Notifications.vue";
 
 // Stores
 const profileStore = useProfileStore();
 // Vars
 const api = authRequest();
 const router = useRouter();
+
 // Handlers
 
 // Hooks
@@ -47,53 +55,42 @@ onMounted(async () => {
       <img :src="logoSmall" alt="logo" class="w-[32px] mac:hidden" />
       <img :src="logoBig" alt="logo" class="hidden h-[40px] mac:block" />
     </router-link>
-    <router-link
-      :to="{ name: 'home' }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
-      <img :src="homeIcon" alt="logo" />
+    <router-link :to="{ name: 'home' }" class="menu-icon">
+      <HomeActive />
+      <Home />
       <span class="hidden mac:flex">Главная</span>
     </router-link>
-    <router-link
-      :to="{ name: 'search' }"
-      class="hidden h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:flex iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
-      <img :src="searchIcon" alt="logo" class="fill-black" />
+    <router-link :to="{ name: 'search' }" class="menu-icon hidden iphone:flex">
+      <SearchActive />
+      <Search />
       <span class="hidden mac:flex">Поиск</span>
     </router-link>
-    <router-link
-      :to="{ name: 'explore' }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
-      <img :src="exploreIcon" alt="logo" />
+    <router-link :to="{ name: 'explore' }" class="menu-icon">
+      <ExploreActive />
+      <Explore />
       <span class="hidden mac:flex">Обзор</span>
     </router-link>
-    <router-link
-      :to="{ name: 'reels' }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
-      <img :src="reelsIcon" alt="logo" />
+    <router-link :to="{ name: 'reels' }" class="menu-icon">
+      <ReelsActive />
+      <Reels />
       <span class="hidden mac:flex">Короткие видео</span>
     </router-link>
-    <router-link
-      :to="{ name: 'create' }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
-      <img :src="createIcon" alt="logo" />
+    <router-link :to="{ name: 'create' }" class="menu-icon">
+      <CreateActive />
+      <Create />
       <span class="hidden mac:flex">Загрузить</span>
     </router-link>
-    <router-link
-      :to="{ name: 'messages' }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
-      <img :src="messagesIcon" alt="logo" />
+    <router-link :to="{ name: 'messages' }" class="menu-icon">
+      <MessagesActive />
+      <Messages />
       <span class="hidden mac:flex">Сообщения</span>
     </router-link>
     <router-link
       :to="{ name: 'notifications' }"
-      class="hidden h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:flex iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
+      class="menu-icon hidden iphone:flex"
     >
-      <img :src="notificationsIcon" alt="logo" />
+      <NotificationsActive />
+      <Notifications />
       <span class="hidden mac:flex">Уведомления</span>
     </router-link>
     <router-link
@@ -102,7 +99,7 @@ onMounted(async () => {
         name: 'profile',
         params: { user: profileStore.userInfo.username },
       }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
+      class="menu-icon"
     >
       <img
         :src="profileStore.userInfo.profile_image?.large"
@@ -111,11 +108,7 @@ onMounted(async () => {
       />
       <span class="hidden mac:flex">Профиль</span>
     </router-link>
-    <router-link
-      v-else
-      :to="{ name: 'auth' }"
-      class="flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]"
-    >
+    <router-link v-else :to="{ name: 'auth' }" class="menu-icon">
       <img :src="userPlaceholder" alt="logo" class="w-[24px] rounded-full" />
       <span class="hidden mac:flex">Войти</span>
     </router-link>

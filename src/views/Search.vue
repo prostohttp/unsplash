@@ -38,6 +38,7 @@ const searchHandler = async () => {
     try {
       const res = await api.search.getPhotos({
         query: route.query.s,
+        page: postStore.pageSearchIndex,
       });
       isLoading.value = true;
       setLocalSearchList([]);
@@ -62,8 +63,10 @@ const scrollHandler = async () => {
   if (currentScroll === documentHeight) {
     if (route.query.s) {
       try {
+        postStore.pageSearchIndex = postStore.pageSearchIndex + 1;
         const res = await api.search.getPhotos({
           query: route.query.s,
+          page: postStore.pageSearchIndex,
         });
         isLoading.value = true;
         if (res.errors) {
@@ -74,6 +77,7 @@ const scrollHandler = async () => {
             ...res.response.results,
           ]);
         } else {
+          document.removeEventListener("scroll", scrollHandler);
           error.value = "Ничего не найдено";
         }
         isLoading.value = false;
@@ -112,9 +116,7 @@ watch(route, async () => {
 
 <template>
   <div class="flex iphone:gap-[50px]">
-    <div
-      class="pt-[12px] iphone:ml-[40px] iphone:min-w-[350px] ipad:min-w-[400px]"
-    >
+    <div class="pt-[12px] iphone:min-w-[350px] ipad:min-w-[400px]">
       <form @submit.prevent="onSubmit" class="relative hidden iphone:flex">
         <AppSearch v-model="searchValue" class="w-full" />
       </form>

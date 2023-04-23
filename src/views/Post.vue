@@ -1,11 +1,11 @@
 <script setup>
-import { useRoute } from "vue-router";
 import { onBeforeMount, ref } from "vue";
+import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
 import { authRequest } from "@/api/unsplash.js";
-import likeIcon from "~/svg/notifications-icon.svg";
 import { numWord } from "@/helpers/functons.js";
 import { usePostStore } from "@/stores/post.js";
-import { storeToRefs } from "pinia";
+import likeIcon from "~/svg/notifications-icon.svg";
 
 // Stores
 const postStore = usePostStore();
@@ -16,10 +16,10 @@ const api = authRequest();
 const photo = ref({});
 const error = ref("");
 const isLoading = ref(true);
-
+const isFull = ref(false);
 // Handlers
 const likeHandler = () => {
-  alert("Лайк");
+  alert("Здесь мог быть твой лайк");
 };
 // Hooks
 onBeforeMount(async () => {
@@ -66,9 +66,18 @@ onBeforeMount(async () => {
     </div>
     <div class="overflow-hidden rounded-[3px]">
       <img
-        :src="photo.urls.regular"
+        v-if="isFull"
+        :src="photo.urls.full"
         :alt="photo.alt_description"
-        class="w-auto"
+        class="w-auto cursor-zoom-out"
+        @click="isFull = !isFull"
+      />
+      <img
+        v-else
+        :src="photo.urls.small"
+        :alt="photo.alt_description"
+        class="w-auto cursor-zoom-in"
+        @click="isFull = !isFull"
       />
     </div>
     <div class="border-b border-grey pb-[20px]">
@@ -77,7 +86,7 @@ onBeforeMount(async () => {
           @click.prevent="likeHandler"
           class="flex items-center justify-center"
         >
-          <img :src="likeIcon" alt="like" />
+          <img :src="likeIcon" alt="like" class="cursor-pointer" />
         </a>
       </div>
       <div class="font-semibold">
@@ -100,6 +109,7 @@ onBeforeMount(async () => {
         name: routeNameForHash,
         hash: `#${photo.id}`,
       }"
+      class="text-blue"
     >
       Вернуться к ленте фотографий
     </router-link>

@@ -33,9 +33,7 @@ const logoutHandler = () => {
       </router-link>
     </div>
     <template v-else>
-      <div
-        class="mt-[20px] flex basis-5/12 justify-center iphone:mt-0 ipad:basis-2/12"
-      >
+      <div class="flex basis-5/12 justify-center iphone:mt-0 ipad:basis-2/12">
         <img
           :src="profileStore.userInfo?.profile_image.large"
           :alt="profileStore.userInfo?.name"
@@ -46,7 +44,7 @@ const logoutHandler = () => {
         <h1 class="text-center text-[22px] iphone:text-left">
           {{ profileStore.userInfo?.name }}
         </h1>
-        <div>
+        <div class="text-center iphone:text-left">
           <a
             :href="profileStore.userInfo?.links.html"
             target="_blank"
