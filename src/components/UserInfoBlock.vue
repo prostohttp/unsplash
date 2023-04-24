@@ -23,7 +23,7 @@ const logoutHandler = () => {
       <router-link
         :to="{
           name: 'profile',
-          params: { user: profileStore.userInfo.username, tab: 1 },
+          params: { user: profileStore.userInfo.username, tab: 0 },
         }"
         class="flex items-center gap-[15px]"
       >

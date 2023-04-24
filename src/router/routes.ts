@@ -81,7 +81,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user/:tab",
+    path: "/profile/:user?/:tab?",
     component: () => import("../views/Profile.vue"),
     name: "profile",
     meta: {
@@ -96,7 +96,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user/:tab/:photo",
+    path: "/profile/:user?/:tab?/:photo?",
     component: () => import("../views/ProfilePhoto.vue"),
     name: "profile-photo",
     meta: {
@@ -111,7 +111,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user/:tab/:like",
+    path: "/profile/:user?/:tab?/:like?",
     component: () => import("../views/ProfileLike.vue"),
     name: "profile-like",
     meta: {

@@ -37,7 +37,7 @@ const loginHandler = handleSubmit(async () => {
       localStorage.setItem("isAuth", profileStore.userInfo.username);
       await router.push({
         name: "profile",
-        params: { user: profileStore.userInfo.username },
+        params: { user: profileStore.userInfo.username, tab: 0 },
       });
     }
   }
