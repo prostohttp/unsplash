@@ -11,7 +11,9 @@ const emitter = mitt();
 const app = createApp(App);
 app.config.globalProperties.emitter = emitter;
 app.use(createPinia());
-app.use(router);
 app.use(VueMasonryPlugin);
+app.use(router);
 app.directive("click-outside", clickOutside);
-app.mount("#app");
+router.isReady().then(() => {
+  app.mount("#app");
+});

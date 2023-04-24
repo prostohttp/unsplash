@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { authRequest } from "@/api/unsplash.js";
 import AppFeed from "@/components/AppFeed.vue";
 import { usePostStore } from "@/stores/post.js";
-import UserInfoBlock from "@/components/UserInfoBlock.vue";
+import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 
 // Stores
 const postStore = usePostStore();

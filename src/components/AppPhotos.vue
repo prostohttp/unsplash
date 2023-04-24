@@ -32,7 +32,6 @@ const scrollHandler = async () => {
         ]);
       } else {
         document.removeEventListener("scroll", scrollHandler);
-        error.value = "Ничего не найдено";
       }
       isLoading.value = false;
     } catch (e) {

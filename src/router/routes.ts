@@ -1,5 +1,4 @@
 import { RouteRecordRaw } from "vue-router";
-
 export const routes: ReadonlyArray<RouteRecordRaw> = [
   {
     path: "/",
@@ -74,14 +73,17 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
     beforeEnter(to, from, next) {
       if (localStorage.getItem("isAuth")) {
-        next({ name: "profile" });
+        next({
+          name: "profile",
+          params: { user: localStorage.getItem("isAuth"), tab: 0 },
+        });
       } else {
         next();
       }
     },
   },
   {
-    path: "/profile/:user?/:tab?",
+    path: "/profile/:user/:tab",
     component: () => import("../views/Profile.vue"),
     name: "profile",
     meta: {
@@ -96,7 +98,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user?/:tab?/:photo?",
+    path: "/profile/:user/:tab/:photo",
     component: () => import("../views/ProfilePhoto.vue"),
     name: "profile-photo",
     meta: {
@@ -111,7 +113,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user?/:tab?/:like?",
+    path: "/profile/:user/:tab/:like",
     component: () => import("../views/ProfileLike.vue"),
     name: "profile-like",
     meta: {

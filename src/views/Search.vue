@@ -8,7 +8,7 @@ import AppSearch from "@/components/AppSearch.vue";
 import { usePostStore } from "@/stores/post.js";
 import { useSearchStore } from "@/stores/search.js";
 import { storeToRefs } from "pinia";
-import UserInfoBlock from "@/components/UserInfoBlock.vue";
+import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 
 // Stores
 const postStore = usePostStore();

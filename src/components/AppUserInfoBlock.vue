@@ -1,6 +1,7 @@
 <script setup>
 import { useProfileStore } from "@/stores/profile.js";
 import { useRouter } from "vue-router";
+import AppLoginForm from "@/components/AppLoginForm.vue";
 
 const profileStore = useProfileStore();
 const router = useRouter();
@@ -10,7 +11,6 @@ const logoutHandler = () => {
   profileStore.setPhotos([]);
   profileStore.setLikes([]);
   profileStore.setCollections([]);
-  router.push({ name: "auth" });
 };
 </script>
 
@@ -47,7 +47,7 @@ const logoutHandler = () => {
       </div>
     </div>
     <router-link :to="{ name: 'auth' }" custom v-slot="{ navigate }" v-else>
-      <button @click="navigate" role="link">Авторизация</button>
+      <AppLoginForm class="w-[300px]" />
     </router-link>
   </div>
 </template>
