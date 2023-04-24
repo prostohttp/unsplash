@@ -24,8 +24,10 @@ const { titles, activeTab, content } = defineProps({
 </script>
 
 <template>
-  <div class="tabs">
-    <ul class="mb-[40px] flex gap-[30px] border-b border-grey">
+  <div class="tabs relative w-full">
+    <ul
+      class="sticky left-0 top-[60px] z-[100] mb-[40px] flex w-full gap-[30px] border-b border-grey bg-white iphone:top-0"
+    >
       <li
         v-for="(title, index) in titles"
         :key="title"

@@ -18,12 +18,12 @@ const logoutHandler = () => {
   <div class="sticky right-0 top-[10px] text-[14px]">
     <div
       v-if="profileStore.userInfo"
-      class="flex h-auto items-center gap-[40px] overflow-hidden"
+      class="flex h-auto flex-col items-center gap-0 overflow-hidden ipad:flex-row ipad:gap-[40px]"
     >
       <router-link
         :to="{
           name: 'profile',
-          params: { user: profileStore.userInfo.username },
+          params: { user: profileStore.userInfo.username, tab: 1 },
         }"
         class="flex items-center gap-[15px]"
       >

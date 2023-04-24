@@ -4,7 +4,7 @@
 
 @layer base {
 	body {
-		@apply min-w-[420px] subpixel-antialiased selection:bg-accent selection:text-white;
+		@apply subpixel-antialiased selection:bg-accent selection:text-white;
 	}
 
 	input[type="text"] {
@@ -38,6 +38,7 @@
 	.active span {
 		@apply text-[#111]
 	}
+
 }
 
 @layer utilities {

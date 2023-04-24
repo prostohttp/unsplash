@@ -1,7 +1,8 @@
 <script setup>
 import { authRequest } from "@/api/unsplash.js";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useProfileStore } from "@/stores/profile.js";
+import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
@@ -10,8 +11,41 @@ const api = authRequest();
 const isLoading = ref(true);
 const error = ref("");
 // Handlers
+const scrollHandler = async () => {
+  let documentHeight = document.body.scrollHeight;
+  let currentScroll = window.scrollY + window.innerHeight;
+  let modifier = 1;
+  if (currentScroll + modifier >= documentHeight) {
+    try {
+      profileStore.pageTabLikesIndex = profileStore.pageTabLikesIndex + 1;
+      const res = await api.users.getLikes({
+        username: localStorage.getItem("isAuth"),
+        page: profileStore.pageTabLikesIndex,
+      });
+      isLoading.value = true;
+      if (res.errors) {
+        error.value = "Возникла ошибка";
+      } else if (res.response.results.length) {
+        profileStore.setLikes([
+          ...profileStore.userLikes,
+          ...res.response.results,
+        ]);
+      } else {
+        document.removeEventListener("scroll", scrollHandler);
+        error.value = "Ничего не найдено";
+      }
+      isLoading.value = false;
+    } catch (e) {
+      isLoading.value = false;
+      error.value = "Ошибка сети";
+      console.log(e);
+      document.removeEventListener("scroll", scrollHandler);
+    }
+  }
+};
 // Hooks
 onMounted(async () => {
+  document.addEventListener("scroll", scrollHandler);
   if (profileStore.userLikes.length) {
     isLoading.value = false;
   } else {
@@ -26,7 +60,7 @@ onMounted(async () => {
       } else if (res.response.results.length) {
         profileStore.setLikes(res.response.results);
       } else {
-        error.value = "Вы пока не ставили лайки";
+        error.value = "Фото пока что нет";
       }
     } catch (e) {
       isLoading.value = false;
@@ -34,10 +68,18 @@ onMounted(async () => {
     }
   }
 });
+onUnmounted(() => {
+  document.removeEventListener("scroll", scrollHandler);
+});
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-[18px]">Загрузка</div>
+  <div v-if="isLoading" class="text-[18px]">Загрузка...</div>
   <div v-else-if="error" class="text-[18px]">{{ error }}</div>
-  <div v-else>Лайки профиля</div>
+  <div v-else>
+    <AppPhotosGrid
+      :items="profileStore.userLikes"
+      :route="{ name: 'profile-like', param: 'like' }"
+    />
+  </div>
 </template>

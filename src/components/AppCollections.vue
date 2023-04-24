@@ -37,7 +37,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-[18px]">Загрузка</div>
+  <div v-if="isLoading" class="text-[18px]">Загрузка...</div>
   <div v-else-if="error" class="text-[18px]">{{ error }}</div>
   <div v-else>Коллекции профиля</div>
 </template>

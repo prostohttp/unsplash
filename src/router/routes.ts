@@ -81,9 +81,39 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user/:tab?",
+    path: "/profile/:user/:tab",
     component: () => import("../views/Profile.vue"),
     name: "profile",
+    meta: {
+      layout: "FullWidth",
+    },
+    beforeEnter(to, from, next) {
+      if (!localStorage.getItem("isAuth")) {
+        next({ name: "auth" });
+      } else {
+        next();
+      }
+    },
+  },
+  {
+    path: "/profile/:user/:tab/:photo",
+    component: () => import("../views/ProfilePhoto.vue"),
+    name: "profile-photo",
+    meta: {
+      layout: "FullWidth",
+    },
+    beforeEnter(to, from, next) {
+      if (!localStorage.getItem("isAuth")) {
+        next({ name: "auth" });
+      } else {
+        next();
+      }
+    },
+  },
+  {
+    path: "/profile/:user/:tab/:like",
+    component: () => import("../views/ProfileLike.vue"),
+    name: "profile-like",
     meta: {
       layout: "FullWidth",
     },

@@ -69,14 +69,14 @@ onBeforeMount(async () => {
         v-if="isFull"
         :src="photo.urls.full"
         :alt="photo.alt_description"
-        class="w-auto cursor-zoom-out"
+        class="w-auto cursor-zoom-out rounded-[3px]"
         @click="isFull = !isFull"
       />
       <img
         v-else
         :src="photo.urls.small"
         :alt="photo.alt_description"
-        class="w-auto cursor-zoom-in"
+        class="w-auto cursor-zoom-in rounded-[3px]"
         @click="isFull = !isFull"
       />
     </div>

@@ -1,7 +1,7 @@
 <script setup>
 import { useProfileStore } from "@/stores/profile.js";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import AppTabs from "@/components/AppTabs.vue";
 import AppPhotos from "@/components/AppPhotos.vue";
 import AppLikes from "@/components/AppLikes.vue";
@@ -15,6 +15,7 @@ const profileStore = useProfileStore();
 // Vars
 const error = ref("");
 const router = useRouter();
+const route = useRoute();
 const tabTitles = [
   {
     label: "Фото",
@@ -45,8 +46,20 @@ const logoutHandler = () => {
 };
 const changeTab = (index) => {
   activeTab.value = index;
+  router.push({
+    name: "profile",
+    params: { user: profileStore.userInfo.username, tab: index },
+  });
 };
 // Hooks
+onMounted(() => {
+  const tab = +route.params.tab;
+  if (tab) {
+    if (tab === 0 || tab === 1 || tab === 2) {
+      activeTab.value = +route.params.tab;
+    }
+  }
+});
 </script>
 
 <template>
@@ -72,7 +85,9 @@ const changeTab = (index) => {
           class="rounded-full"
         />
       </div>
-      <div class="flex basis-9/12 flex-col ipad:basis-10/12 imac:basis-11/12">
+      <div
+        class="flex basis-9/12 flex-col items-center iphone:items-start ipad:basis-10/12 imac:basis-11/12"
+      >
         <h1 class="text-center text-[40px] font-bold iphone:text-left">
           {{ profileStore.userInfo?.name }}
         </h1>
