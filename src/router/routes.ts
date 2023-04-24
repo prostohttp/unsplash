@@ -81,7 +81,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user",
+    path: "/profile/:user/:tab?",
     component: () => import("../views/Profile.vue"),
     name: "profile",
     meta: {

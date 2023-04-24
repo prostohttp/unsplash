@@ -32,7 +32,12 @@
 	.menu-icon.router-link-active svg:last-of-type {
 		@apply hidden
 	}
-
+	.active svg {
+		@apply fill-[#111]
+	}
+	.active span {
+		@apply text-[#111]
+	}
 }
 
 @layer utilities {

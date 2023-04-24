@@ -128,7 +128,7 @@ watch(route, async () => {
         :feeds="localSearchList"
         :route-name="route.name"
         :route-query="route.query.s || null"
-        class="mt-[50px]"
+        class="iphone:mt-[50px]"
       />
       <div
         v-else-if="error && !isLoading"

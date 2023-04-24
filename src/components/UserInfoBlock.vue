@@ -7,6 +7,9 @@ const router = useRouter();
 const logoutHandler = () => {
   localStorage.removeItem("isAuth");
   profileStore.setUser(null);
+  profileStore.setPhotos([]);
+  profileStore.setLikes([]);
+  profileStore.setCollections([]);
   router.push({ name: "auth" });
 };
 </script>

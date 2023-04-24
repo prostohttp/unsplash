@@ -32,7 +32,7 @@ watch(route, (value) => {
       <img :src="fullLogo" alt="Россграм" class="h-[30px]" />
     </router-link>
     <form @submit.prevent="onSubmit" class="relative">
-      <AppSearch v-model="searchValue" />
+      <AppSearch v-model="searchValue" class="w-[268px]" />
     </form>
     <img :src="notifIcon" alt="notifications" />
   </div>

@@ -10,7 +10,7 @@ import TheHeader from "@/components/TheHeader.vue";
       <TheSidebar />
     </aside>
     <section
-      class="relative mt-[30px] px-[16px] py-[70px] iphone:ml-[100px] iphone:mt-0 iphone:w-[90%] iphone:pt-[30px] ipad:ml-[150px] mac:ml-[350px] imac:ml-[400px]"
+      class="relative mt-[30px] px-[16px] py-[70px] iphone:ml-[100px] iphone:mt-0 iphone:w-[90%] iphone:py-[70px] ipad:ml-[150px] mac:ml-[350px] imac:ml-[400px]"
     >
       <slot />
     </section>
