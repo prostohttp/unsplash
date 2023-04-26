@@ -2,7 +2,7 @@
 import { authRequest } from "@/api/unsplash.js";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useProfileStore } from "@/stores/profile.js";
-import AppCollectionsGrid from "@/components/AppCollectionsGrid.vue";
+import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
@@ -17,19 +17,17 @@ const scrollHandler = async () => {
   let modifier = 1;
   if (currentScroll + modifier >= documentHeight) {
     try {
-      profileStore.pageTabCollectionsIndex =
-        profileStore.pageTabCollectionsIndex + 1;
-      const res = await api.users.getCollections({
+      profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
+      const res = await api.users.getPhotos({
         username: localStorage.getItem("isAuth"),
-        page: profileStore.pageTabCollectionsIndex,
-        perPage: 10,
+        page: profileStore.pageTabPhotosIndex,
       });
       isLoading.value = true;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
-        profileStore.setCollections([
-          ...profileStore.userCollections,
+        profileStore.setPhotos([
+          ...profileStore.userPhotos,
           ...res.response.results,
         ]);
       } else {
@@ -47,20 +45,19 @@ const scrollHandler = async () => {
 // Hooks
 onMounted(async () => {
   document.addEventListener("scroll", scrollHandler);
-  if (profileStore.userCollections.length) {
+  if (profileStore.userPhotos.length) {
     isLoading.value = false;
   } else {
     try {
-      const res = await api.users.getCollections({
+      const res = await api.users.getPhotos({
         username: localStorage.getItem("isAuth"),
-        page: profileStore.pageTabCollectionsIndex,
-        perPage: 10,
+        page: profileStore.pageTabPhotosIndex,
       });
       isLoading.value = false;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
-        profileStore.setCollections(res.response.results);
+        profileStore.setPhotos(res.response.results);
       } else {
         error.value = "Фото пока что нет";
       }
@@ -76,9 +73,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-[18px]">Загрузка..</div>
+  <div v-if="isLoading" class="text-[18px]">Загрузка...</div>
   <div v-else-if="error" class="text-[18px]">{{ error }}</div>
-  <template v-else>
-    <AppCollectionsGrid />
-  </template>
+  <div v-else>
+    <AppPhotosGrid
+      :items="profileStore.userPhotos"
+      :route="{ name: 'profile-photo', param: 'photo' }"
+    />
+  </div>
 </template>

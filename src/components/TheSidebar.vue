@@ -97,7 +97,7 @@ onMounted(async () => {
       v-if="profileStore.userInfo"
       :to="{
         name: 'profile',
-        params: { user: profileStore.userInfo.username, tab: 0 },
+        params: { user: profileStore.userInfo.username, tab: 'tab-photos' },
       }"
       class="menu-icon"
     >

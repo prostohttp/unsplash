@@ -43,18 +43,18 @@ const { titles, activeTab, content } = defineProps({
           'text-[#767676]',
           'group',
           {
-            'active border-b-[#000] text-[#111]': activeTab === index,
+            'active border-b-[#000] text-body': activeTab === index,
           },
         ]"
       >
         <component
           :is="title.icon"
-          class="w-[16px] fill-[#d1d1d1] group-hover:fill-[#111]"
+          class="w-[16px] fill-[#d1d1d1] group-hover:fill-body"
         />
-        <span class="group-hover:text-[#111]">
+        <span class="group-hover:text-body">
           {{ title.label }}
         </span>
-        <span class="group-hover:text-[#111]">
+        <span class="group-hover:text-body">
           {{ profileStore.userInfo[title.count] }}</span
         >
       </li>

@@ -23,6 +23,15 @@ export const useProfileStore = defineStore("profile", () => {
   const setCollections = (data) => {
     userCollections.value = data;
   };
+  const resetState = () => {
+    userInfo.value = null;
+    userPhotos.value = [];
+    userLikes.value = [];
+    userCollections.value = [];
+    pageTabPhotosIndex.value = 1;
+    pageTabLikesIndex.value = 1;
+    pageTabCollectionsIndex.value = 1;
+  };
   return {
     userInfo,
     setUser,
@@ -35,5 +44,6 @@ export const useProfileStore = defineStore("profile", () => {
     setPhotos,
     setLikes,
     setCollections,
+    resetState,
   };
 });

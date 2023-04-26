@@ -19,16 +19,19 @@ const route = useRoute();
 const tabTitles = [
   {
     label: "Фото",
+    name: "tab-photos",
     count: "total_photos",
     icon: TotalPhotos,
   },
   {
     label: "Лайки",
+    name: "tab-likes",
     count: "total_likes",
     icon: TotalLikes,
   },
   {
     label: "Коллекции",
+    name: "tab-collections",
     count: "total_collections",
     icon: TotalCollections,
   },
@@ -38,26 +41,35 @@ const activeTab = ref(0);
 // Handlers
 const logoutHandler = () => {
   localStorage.removeItem("isAuth");
-  profileStore.setUser(null);
-  profileStore.setPhotos([]);
-  profileStore.setLikes([]);
-  profileStore.setCollections([]);
+  profileStore.resetState();
   router.push({ name: "auth" });
 };
 const changeTab = (index) => {
   activeTab.value = index;
   router.push({
     name: "profile",
-    params: { user: profileStore.userInfo.username, tab: index },
+    params: {
+      user: profileStore.userInfo.username,
+      tab: tabTitles[index].name,
+    },
   });
 };
 // Hooks
 onMounted(() => {
-  const tab = +route.params.tab;
+  const tab = route.params.tab;
   if (tab) {
-    if (tab === 0 || tab === 1 || tab === 2) {
-      activeTab.value = +route.params.tab;
+    if (tabTitles.some((item) => item.name === tab)) {
+      activeTab.value = tabTitles.findIndex((el) => el.name === tab);
     }
+  } else {
+    activeTab.value = 0;
+    router.push({
+      name: "profile",
+      params: {
+        user: profileStore.userInfo?.username,
+        tab: tabTitles[activeTab.value].name,
+      },
+    });
   }
 });
 </script>

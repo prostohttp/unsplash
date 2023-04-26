@@ -14,6 +14,4 @@ app.use(createPinia());
 app.use(VueMasonryPlugin);
 app.use(router);
 app.directive("click-outside", clickOutside);
-router.isReady().then(() => {
-  app.mount("#app");
-});
+app.mount("#app");

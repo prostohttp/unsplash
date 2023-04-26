@@ -75,7 +75,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
       if (localStorage.getItem("isAuth")) {
         next({
           name: "profile",
-          params: { user: localStorage.getItem("isAuth"), tab: 0 },
+          params: { user: localStorage.getItem("isAuth") },
         });
       } else {
         next();
@@ -83,7 +83,7 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
-    path: "/profile/:user/:tab",
+    path: "/profile/:user?/:tab?",
     component: () => import("../views/Profile.vue"),
     name: "profile",
     meta: {
@@ -104,13 +104,6 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     meta: {
       layout: "FullWidth",
     },
-    beforeEnter(to, from, next) {
-      if (!localStorage.getItem("isAuth")) {
-        next({ name: "auth" });
-      } else {
-        next();
-      }
-    },
   },
   {
     path: "/profile/:user/:tab/:like",
@@ -119,12 +112,13 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     meta: {
       layout: "FullWidth",
     },
-    beforeEnter(to, from, next) {
-      if (!localStorage.getItem("isAuth")) {
-        next({ name: "auth" });
-      } else {
-        next();
-      }
+  },
+  {
+    path: "/profile/:user/:tab/:collection",
+    component: () => import("../views/ProfileCollection.vue"),
+    name: "profile-collection",
+    meta: {
+      layout: "FullWidth",
     },
   },
   {

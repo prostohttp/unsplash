@@ -7,10 +7,7 @@ const profileStore = useProfileStore();
 const router = useRouter();
 const logoutHandler = () => {
   localStorage.removeItem("isAuth");
-  profileStore.setUser(null);
-  profileStore.setPhotos([]);
-  profileStore.setLikes([]);
-  profileStore.setCollections([]);
+  profileStore.resetState();
 };
 </script>
 
@@ -23,7 +20,7 @@ const logoutHandler = () => {
       <router-link
         :to="{
           name: 'profile',
-          params: { user: profileStore.userInfo.username, tab: 0 },
+          params: { user: profileStore.userInfo.username },
         }"
         class="flex items-center gap-[15px]"
       >

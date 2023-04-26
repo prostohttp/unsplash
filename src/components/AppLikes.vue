@@ -78,7 +78,7 @@ onUnmounted(() => {
   <div v-else>
     <AppPhotosGrid
       :items="profileStore.userLikes"
-      :route="{ name: 'profile-like', param: 'like' }"
+      :route="{ name: 'profile-like', param: 'like', tab: 'tab-likes' }"
     />
   </div>
 </template>

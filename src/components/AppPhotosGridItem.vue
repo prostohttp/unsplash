@@ -21,7 +21,11 @@ const { item } = defineProps({
   <router-link
     :to="{
       name: route.name,
-      params: { user: item.user.username, [route.param]: item.id },
+      params: {
+        user: item.user.username,
+        tab: route.tab,
+        [route.param]: item.id,
+      },
     }"
     :id="item.id"
   >
