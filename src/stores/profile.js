@@ -10,6 +10,8 @@ export const useProfileStore = defineStore("profile", () => {
   const pageTabPhotosIndex = ref(1);
   const pageTabLikesIndex = ref(1);
   const pageTabCollectionsIndex = ref(1);
+  const pageCollectionIndex = ref(1);
+  const collectionsItem = ref([]);
   // Handlers
   const setUser = (data) => {
     userInfo.value = data;
@@ -22,6 +24,9 @@ export const useProfileStore = defineStore("profile", () => {
   };
   const setCollections = (data) => {
     userCollections.value = data;
+  };
+  const setCollectionsItem = (data) => {
+    collectionsItem.value = data;
   };
   const resetState = () => {
     userInfo.value = null;
@@ -45,5 +50,8 @@ export const useProfileStore = defineStore("profile", () => {
     setLikes,
     setCollections,
     resetState,
+    collectionsItem,
+    setCollectionsItem,
+    pageCollectionIndex,
   };
 });

@@ -122,6 +122,22 @@ export const routes: ReadonlyArray<RouteRecordRaw> = [
     },
   },
   {
+    path: "/profile/:user/:tab/:collection/:collectionId",
+    component: () => import("../views/ProfileCollectionItem.vue"),
+    name: "profile-collection-item",
+    meta: {
+      layout: "FullWidth",
+    },
+  },
+  {
+    path: "/profile/:user/:tab/:collection/:collectionId/:photo",
+    component: () => import("../views/ProfileCollectionItemPhoto.vue"),
+    name: "profile-collection-item-photo",
+    meta: {
+      layout: "FullWidth",
+    },
+  },
+  {
     path: "/:notFound(.*)*",
     component: () => import("../views/NotFound.vue"),
     name: "404",

@@ -19,10 +19,11 @@ const { item } = defineProps({
   <div :id="item.id" class="block">
     <router-link
       :to="{
-        name: 'profile-collection',
+        name: 'profile-collection-item',
         params: {
           user: item.user.username,
           collection: item.title,
+          collectionId: item.id,
         },
       }"
       v-if="item.preview_photos"
@@ -53,10 +54,11 @@ const { item } = defineProps({
     <router-link
       v-else
       :to="{
-        name: 'profile-collection',
+        name: 'profile-collection-item',
         params: {
           user: item.user.username,
           collection: item.title,
+          collectionId: item.id,
         },
       }"
       class="grid h-[250px] w-full grid-cols-3 grid-rows-2 gap-[3px] overflow-hidden rounded-[6px]"
