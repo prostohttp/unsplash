@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { UseImage } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
 import { numWord } from "@/helpers/functons.js";
 import likeIcon from "~/svg/notifications-icon.svg";
@@ -45,13 +46,20 @@ onMounted(async () => {
     class="mb-[12px] flex flex-col gap-[10px] py-[12px] text-[14px]"
   >
     <div class="overflow-hidden rounded-[3px]">
-      <img
+      <UseImage
         v-if="isFull"
         :src="photo.urls.full"
         :alt="photo.alt_description"
         class="w-auto cursor-zoom-out rounded-[3px]"
         @click="isFull = !isFull"
-      />
+      >
+        <template #loading>
+          <div class="flex items-center justify-center text-[22px]">
+            Загрузка фото...
+          </div>
+        </template>
+        <template #error> Ошибка загрузки фото </template>
+      </UseImage>
       <img
         v-else
         :src="photo.urls.small"
