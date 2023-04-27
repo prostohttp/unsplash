@@ -33,6 +33,8 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
           ...profileStore.collectionsItem,
           ...res.response.results,
         ]);
+      } else {
+        error.value = "Нет фото или все фото по подписке";
       }
     } catch (e) {
       error.value = "Ошибка сети";
