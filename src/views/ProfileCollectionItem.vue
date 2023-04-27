@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
@@ -9,36 +9,75 @@ import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 const profileStore = useProfileStore();
 // Vars
 const isLoading = ref(true);
+const isLazyLoading = ref(false);
 const error = ref("");
 const api = authRequest();
 const route = useRoute();
 const router = useRouter();
 // Handlers
-// Hooks
-onMounted(async () => {
-  if (route.params.collectionId) {
+const scrollHandler = async () => {
+  let documentHeight = document.body.scrollHeight;
+  let currentScroll = window.scrollY + window.innerHeight;
+  let modifier = 1;
+  if (currentScroll + modifier >= documentHeight) {
     try {
+      isLazyLoading.value = true;
+      profileStore.pageCollectionIndex = profileStore.pageCollectionIndex + 1;
       const res = await api.collections.getPhotos({
         collectionId: route.params.collectionId,
         page: profileStore.pageCollectionIndex,
         perPage: 10,
       });
-      isLoading.value = false;
+      isLoading.value = true;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
-        console.log("results");
-        profileStore.setCollectionsItem(res.response.results);
+        profileStore.setCollectionsItem([
+          ...profileStore.collectionsItem,
+          ...res.response.results,
+        ]);
       } else {
-        console.log("not");
-        error.value = "Нет фото или все фото по подписке";
+        document.removeEventListener("scroll", scrollHandler);
       }
+      isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
       error.value = "Ошибка сети";
       console.log(e);
+      document.removeEventListener("scroll", scrollHandler);
+    }
+    isLazyLoading.value = false;
+  }
+};
+// Hooks
+onMounted(async () => {
+  document.addEventListener("scroll", scrollHandler);
+  if (route.params.collectionId) {
+    if (!profileStore.collectionsItem.length) {
+      try {
+        const res = await api.collections.getPhotos({
+          collectionId: route.params.collectionId,
+          page: profileStore.pageCollectionIndex,
+          perPage: 10,
+        });
+        isLoading.value = false;
+        if (res.errors) {
+          error.value = "Возникла ошибка";
+        } else if (res.response.results.length) {
+          profileStore.setCollectionsItem(res.response.results);
+        } else {
+          error.value = "Нет фото или все фото по подписке";
+        }
+      } catch (e) {
+        isLoading.value = false;
+        error.value = "Ошибка сети";
+        console.log(e);
+      }
     }
   }
+});
+onUnmounted(() => {
+  document.removeEventListener("scroll", scrollHandler);
 });
 </script>
 
@@ -64,7 +103,6 @@ onMounted(async () => {
     <div v-if="isLoading" class="mb-[20px]">Загрузка</div>
     <div v-else-if="error" class="mb-[20px]">{{ error }}</div>
     <div v-else>
-      <div class="mb-[30px]">количество фото</div>
       <div class="gallery">
         <AppPhotosGrid
           :route="{
@@ -74,6 +112,9 @@ onMounted(async () => {
           }"
           :items="profileStore.collectionsItem"
         />
+        <div v-if="isLazyLoading" class="text-center text-[14px]">
+          Загрузка фото...
+        </div>
       </div>
     </div>
     <a

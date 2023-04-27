@@ -9,6 +9,8 @@ const profileStore = useProfileStore();
 // Vars
 const api = authRequest();
 const isLoading = ref(true);
+const isLazyLoading = ref(false);
+
 const error = ref("");
 // Handlers
 const scrollHandler = async () => {
@@ -16,6 +18,8 @@ const scrollHandler = async () => {
   let currentScroll = window.scrollY + window.innerHeight;
   let modifier = 1;
   if (currentScroll + modifier >= documentHeight) {
+    isLazyLoading.value = true;
+
     try {
       profileStore.pageTabLikesIndex = profileStore.pageTabLikesIndex + 1;
       const res = await api.users.getLikes({
@@ -40,6 +44,7 @@ const scrollHandler = async () => {
       console.log(e);
       document.removeEventListener("scroll", scrollHandler);
     }
+    isLazyLoading.value = false;
   }
 };
 // Hooks
@@ -80,5 +85,8 @@ onUnmounted(() => {
       :items="profileStore.userLikes"
       :route="{ name: 'profile-like', param: 'like', tab: 'tab-likes' }"
     />
+    <div v-if="isLazyLoading" class="text-center text-[14px]">
+      Загрузка фото...
+    </div>
   </div>
 </template>

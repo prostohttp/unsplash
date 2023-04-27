@@ -9,6 +9,8 @@ const profileStore = useProfileStore();
 // Vars
 const api = authRequest();
 const isLoading = ref(true);
+const isLazyLoading = ref(false);
+
 const error = ref("");
 // Handlers
 const scrollHandler = async () => {
@@ -17,6 +19,7 @@ const scrollHandler = async () => {
   let modifier = 1;
   if (currentScroll + modifier >= documentHeight) {
     try {
+      isLazyLoading.value = true;
       profileStore.pageTabCollectionsIndex =
         profileStore.pageTabCollectionsIndex + 1;
       const res = await api.users.getCollections({
@@ -42,12 +45,13 @@ const scrollHandler = async () => {
       console.log(e);
       document.removeEventListener("scroll", scrollHandler);
     }
+    isLazyLoading.value = false;
   }
 };
 // Hooks
 onMounted(async () => {
   document.addEventListener("scroll", scrollHandler);
-  if (profileStore.userCollections.length) {
+  if (profileStore.collectionsItem.length) {
     isLoading.value = false;
   } else {
     try {
@@ -80,5 +84,8 @@ onUnmounted(() => {
   <div v-else-if="error" class="text-[18px]">{{ error }}</div>
   <template v-else>
     <AppCollectionsGrid />
+    <div v-if="isLazyLoading" class="text-center text-[14px]">
+      Загрузка фото...
+    </div>
   </template>
 </template>

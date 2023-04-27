@@ -28,6 +28,7 @@ const { item } = defineProps({
       },
     }"
     :id="item.id"
+    class="masonry-image"
   >
     <img
       :src="item.urls.small"

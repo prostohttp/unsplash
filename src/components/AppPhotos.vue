@@ -3,7 +3,6 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
-// import { vIntersectionObserver } from "@vueuse/components";
 
 // Stores
 const profileStore = useProfileStore();
@@ -11,6 +10,7 @@ const profileStore = useProfileStore();
 const root = ref(null);
 const api = authRequest();
 const isLoading = ref(false);
+const isLazyLoading = ref(false);
 const error = ref("");
 // Handlers
 const scrollHandler = async () => {
@@ -18,13 +18,13 @@ const scrollHandler = async () => {
   let currentScroll = window.scrollY + window.innerHeight;
   let modifier = 1;
   if (currentScroll + modifier >= documentHeight) {
+    isLazyLoading.value = true;
     try {
       profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
       const res = await api.users.getPhotos({
         username: localStorage.getItem("isAuth"),
         page: profileStore.pageTabPhotosIndex,
       });
-      isLoading.value = true;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -34,41 +34,13 @@ const scrollHandler = async () => {
         ]);
       } else {
       }
-      isLoading.value = false;
     } catch (e) {
-      isLoading.value = false;
       error.value = "Ошибка сети";
       console.log(e);
     }
+    isLazyLoading.value = false;
   }
 };
-// const onIntersectionObserver = async ([{ isIntersecting }]) => {
-//   if (isIntersecting) {
-//     console.log("observer");
-//     try {
-//       profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
-//       const res = await api.users.getPhotos({
-//         username: localStorage.getItem("isAuth"),
-//         page: profileStore.pageTabPhotosIndex,
-//       });
-//       isLoading.value = true;
-//       if (res.errors) {
-//         error.value = "Возникла ошибка";
-//       } else if (res.response.results.length) {
-//         profileStore.setPhotos([
-//           ...profileStore.userPhotos,
-//           ...res.response.results,
-//         ]);
-//       } else {
-//       }
-//       isLoading.value = false;
-//     } catch (e) {
-//       isLoading.value = false;
-//       error.value = "Ошибка сети";
-//       console.log(e);
-//     }
-//   }
-// };
 // Hooks
 onMounted(async () => {
   document.addEventListener("scroll", scrollHandler);
@@ -80,7 +52,6 @@ onMounted(async () => {
         username: localStorage.getItem("isAuth"),
         page: profileStore.pageTabPhotosIndex,
       });
-      isLoading.value = false;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -92,11 +63,27 @@ onMounted(async () => {
       isLoading.value = false;
       console.log(e);
     }
+    isLoading.value = false;
   }
 });
 onUnmounted(() => {
   document.removeEventListener("scroll", scrollHandler);
 });
+// Observer
+const callback = (entries, observer) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      console.log(
+        "Элемент пересек границу области и все еще соприкасается с ней"
+      );
+      observer.unobserve(entry.target);
+    }
+  });
+};
+const options = {
+  threshold: 1,
+};
+const observer = new IntersectionObserver(callback, options);
 </script>
 
 <template>
@@ -107,9 +94,8 @@ onUnmounted(() => {
       :items="profileStore.userPhotos"
       :route="{ name: 'profile-photo', param: 'photo', tab: 'tab-photos' }"
     />
-    <!--    <div-->
-    <!--      class="absolute bottom-[300px] -z-[1] h-[50px] w-full"-->
-    <!--      v-intersection-observer="[onIntersectionObserver, { root }]"-->
-    <!--    ></div>-->
+    <div v-if="isLazyLoading" class="text-center text-[14px]">
+      Загрузка фото...
+    </div>
   </div>
 </template>
