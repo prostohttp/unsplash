@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { ref } from "vue";
+import { vIntersectionObserver } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
@@ -9,22 +10,18 @@ const profileStore = useProfileStore();
 // Vars
 const root = ref(null);
 const api = authRequest();
-const isLoading = ref(false);
 const isLazyLoading = ref(false);
 const error = ref("");
 // Handlers
-const scrollHandler = async () => {
-  let documentHeight = document.body.scrollHeight;
-  let currentScroll = window.scrollY + window.innerHeight;
-  let modifier = 1;
-  if (currentScroll + modifier >= documentHeight) {
+const onIntersectionObserver = async ([{ isIntersecting }]) => {
+  if (isIntersecting) {
     isLazyLoading.value = true;
     try {
-      profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
       const res = await api.users.getPhotos({
         username: localStorage.getItem("isAuth"),
         page: profileStore.pageTabPhotosIndex,
       });
+      profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -41,55 +38,11 @@ const scrollHandler = async () => {
     isLazyLoading.value = false;
   }
 };
-// Hooks
-onMounted(async () => {
-  document.addEventListener("scroll", scrollHandler);
-  if (profileStore.userPhotos.length) {
-    isLoading.value = false;
-  } else {
-    try {
-      const res = await api.users.getPhotos({
-        username: localStorage.getItem("isAuth"),
-        page: profileStore.pageTabPhotosIndex,
-      });
-      if (res.errors) {
-        error.value = "Возникла ошибка";
-      } else if (res.response.results.length) {
-        profileStore.setPhotos(res.response.results);
-      } else {
-        error.value = "Фото пока что нет";
-      }
-    } catch (e) {
-      isLoading.value = false;
-      console.log(e);
-    }
-    isLoading.value = false;
-  }
-});
-onUnmounted(() => {
-  document.removeEventListener("scroll", scrollHandler);
-});
-// Observer
-const callback = (entries, observer) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      console.log(
-        "Элемент пересек границу области и все еще соприкасается с ней"
-      );
-      observer.unobserve(entry.target);
-    }
-  });
-};
-const options = {
-  threshold: 1,
-};
-const observer = new IntersectionObserver(callback, options);
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-[18px]">Загрузка...</div>
-  <div v-else-if="error" class="text-[18px]">{{ error }}</div>
-  <div v-else class="relative h-full" ref="root">
+  <div v-if="error" class="text-[18px]">{{ error }}</div>
+  <div class="relative h-full" v-else ref="root">
     <AppPhotosGrid
       :items="profileStore.userPhotos"
       :route="{ name: 'profile-photo', param: 'photo', tab: 'tab-photos' }"
@@ -97,5 +50,9 @@ const observer = new IntersectionObserver(callback, options);
     <div v-if="isLazyLoading" class="text-center text-[14px]">
       Загрузка фото...
     </div>
+    <div
+      class="-z[1] observer absolute bottom-[300px] left-0 h-[100px] w-full"
+      v-intersection-observer="[onIntersectionObserver, { root }]"
+    ></div>
   </div>
 </template>

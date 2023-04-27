@@ -1,32 +1,27 @@
 <script setup>
+import { ref } from "vue";
+import { vIntersectionObserver } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
-import { onMounted, onUnmounted, ref } from "vue";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
 // Vars
+const root = ref(null);
 const api = authRequest();
-const isLoading = ref(true);
 const isLazyLoading = ref(false);
-
 const error = ref("");
 // Handlers
-const scrollHandler = async () => {
-  let documentHeight = document.body.scrollHeight;
-  let currentScroll = window.scrollY + window.innerHeight;
-  let modifier = 1;
-  if (currentScroll + modifier >= documentHeight) {
+const onIntersectionObserver = async ([{ isIntersecting }]) => {
+  if (isIntersecting) {
     isLazyLoading.value = true;
-
     try {
-      profileStore.pageTabLikesIndex = profileStore.pageTabLikesIndex + 1;
       const res = await api.users.getLikes({
         username: localStorage.getItem("isAuth"),
         page: profileStore.pageTabLikesIndex,
       });
-      isLoading.value = true;
+      profileStore.pageTabLikesIndex = profileStore.pageTabLikesIndex + 1;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -34,53 +29,19 @@ const scrollHandler = async () => {
           ...profileStore.userLikes,
           ...res.response.results,
         ]);
-      } else {
-        document.removeEventListener("scroll", scrollHandler);
       }
-      isLoading.value = false;
     } catch (e) {
-      isLoading.value = false;
       error.value = "Ошибка сети";
       console.log(e);
-      document.removeEventListener("scroll", scrollHandler);
     }
     isLazyLoading.value = false;
   }
 };
-// Hooks
-onMounted(async () => {
-  document.addEventListener("scroll", scrollHandler);
-  if (profileStore.userLikes.length) {
-    isLoading.value = false;
-  } else {
-    try {
-      const res = await api.users.getLikes({
-        username: localStorage.getItem("isAuth"),
-        page: profileStore.pageTabLikesIndex,
-      });
-      isLoading.value = false;
-      if (res.errors) {
-        error.value = "Возникла ошибка";
-      } else if (res.response.results.length) {
-        profileStore.setLikes(res.response.results);
-      } else {
-        error.value = "Фото пока что нет";
-      }
-    } catch (e) {
-      isLoading.value = false;
-      console.log(e);
-    }
-  }
-});
-onUnmounted(() => {
-  document.removeEventListener("scroll", scrollHandler);
-});
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-[18px]">Загрузка...</div>
-  <div v-else-if="error" class="text-[18px]">{{ error }}</div>
-  <div v-else>
+  <div v-if="error" class="text-[18px]">{{ error }}</div>
+  <div class="relative h-full" v-else ref="root">
     <AppPhotosGrid
       :items="profileStore.userLikes"
       :route="{ name: 'profile-like', param: 'like', tab: 'tab-likes' }"
@@ -88,5 +49,9 @@ onUnmounted(() => {
     <div v-if="isLazyLoading" class="text-center text-[14px]">
       Загрузка фото...
     </div>
+    <div
+      class="-z[1] observer absolute bottom-[100px] left-0 h-[10px] w-full"
+      v-intersection-observer="[onIntersectionObserver, { root }]"
+    ></div>
   </div>
 </template>

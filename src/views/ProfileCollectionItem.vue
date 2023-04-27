@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { vIntersectionObserver } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
@@ -8,26 +9,23 @@ import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 //Stores
 const profileStore = useProfileStore();
 // Vars
-const isLoading = ref(false);
 const isLazyLoading = ref(false);
+const root = ref(null);
 const error = ref("");
 const api = authRequest();
 const route = useRoute();
 const router = useRouter();
 // Handlers
-const scrollHandler = async () => {
-  let documentHeight = document.body.scrollHeight;
-  let currentScroll = window.scrollY + window.innerHeight;
-  let modifier = 1;
-  if (currentScroll + modifier >= documentHeight) {
+const onIntersectionObserver = async ([{ isIntersecting }]) => {
+  if (isIntersecting) {
     try {
       isLazyLoading.value = true;
-      profileStore.pageCollectionIndex = profileStore.pageCollectionIndex + 1;
       const res = await api.collections.getPhotos({
         collectionId: route.params.collectionId,
         page: profileStore.pageCollectionIndex,
         perPage: 10,
       });
+      profileStore.pageCollectionIndex = profileStore.pageCollectionIndex + 1;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -35,47 +33,14 @@ const scrollHandler = async () => {
           ...profileStore.collectionsItem,
           ...res.response.results,
         ]);
-      } else {
-        document.removeEventListener("scroll", scrollHandler);
       }
     } catch (e) {
       error.value = "Ошибка сети";
       console.log(e);
-      document.removeEventListener("scroll", scrollHandler);
     }
     isLazyLoading.value = false;
   }
 };
-// Hooks
-onMounted(async () => {
-  isLoading.value = true;
-  document.addEventListener("scroll", scrollHandler);
-  if (route.params.collectionId) {
-    if (!profileStore.collectionsItem.length) {
-      try {
-        const res = await api.collections.getPhotos({
-          collectionId: route.params.collectionId,
-          page: profileStore.pageCollectionIndex,
-          perPage: 10,
-        });
-        if (res.errors) {
-          error.value = "Возникла ошибка";
-        } else if (res.response.results.length) {
-          profileStore.setCollectionsItem(res.response.results);
-        } else {
-          error.value = "Нет фото или все фото по подписке";
-        }
-      } catch (e) {
-        error.value = "Ошибка се	ти";
-        console.log(e);
-      }
-    }
-  }
-  isLoading.value = false;
-});
-onUnmounted(() => {
-  document.removeEventListener("scroll", scrollHandler);
-});
 </script>
 
 <template>
@@ -97,10 +62,9 @@ onUnmounted(() => {
         {{ profileStore.userInfo?.name }}
       </span>
     </a>
-    <div v-if="isLoading" class="mb-[20px]">Загрузка...</div>
-    <div v-else-if="error" class="mb-[20px]">{{ error }}</div>
+    <div v-if="error" class="mb-[20px]">{{ error }}</div>
     <div v-else>
-      <div class="gallery">
+      <div class="gallery relative h-full" ref="root">
         <AppPhotosGrid
           :route="{
             name: 'profile-collection-item-photo',
@@ -109,9 +73,16 @@ onUnmounted(() => {
           }"
           :items="profileStore.collectionsItem"
         />
-        <div v-if="isLazyLoading" class="text-center text-[14px]">
+        <div
+          v-if="isLazyLoading"
+          class="absolute w-full text-center text-[14px]"
+        >
           Загрузка фото...
         </div>
+        <div
+          class="-z[1] observer bottom-[300px] left-0 h-[100px] w-full"
+          v-intersection-observer="[onIntersectionObserver, { root }]"
+        ></div>
       </div>
     </div>
     <a
