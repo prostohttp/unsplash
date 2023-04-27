@@ -15,7 +15,6 @@ const error = ref("");
 // Handlers
 const onIntersectionObserver = async ([{ isIntersecting }]) => {
   if (isIntersecting) {
-    console.log("observer");
     try {
       isLazyLoading.value = true;
       const res = await api.users.getCollections({

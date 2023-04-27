@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
@@ -41,6 +41,11 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
     isLazyLoading.value = false;
   }
 };
+// Hooks
+onMounted(() => {
+  profileStore.pageCollectionIndex = 1;
+  profileStore.setCollectionsItem([]);
+});
 </script>
 
 <template>

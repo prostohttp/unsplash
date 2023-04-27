@@ -50,7 +50,7 @@ const loginHandler = handleSubmit(async () => {
     <form @submit="loginHandler" class="flex flex-col">
       <input
         type="text"
-        v-model="login"
+        v-model.trim="login"
         @input="error = ''"
         placeholder="Введите ваш ник"
         class="min-w-full"
