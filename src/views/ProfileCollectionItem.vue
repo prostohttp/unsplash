@@ -8,7 +8,7 @@ import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 //Stores
 const profileStore = useProfileStore();
 // Vars
-const isLoading = ref(true);
+const isLoading = ref(false);
 const isLazyLoading = ref(false);
 const error = ref("");
 const api = authRequest();
@@ -28,7 +28,6 @@ const scrollHandler = async () => {
         page: profileStore.pageCollectionIndex,
         perPage: 10,
       });
-      isLoading.value = true;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -39,9 +38,7 @@ const scrollHandler = async () => {
       } else {
         document.removeEventListener("scroll", scrollHandler);
       }
-      isLoading.value = false;
     } catch (e) {
-      isLoading.value = false;
       error.value = "Ошибка сети";
       console.log(e);
       document.removeEventListener("scroll", scrollHandler);
@@ -51,6 +48,7 @@ const scrollHandler = async () => {
 };
 // Hooks
 onMounted(async () => {
+  isLoading.value = true;
   document.addEventListener("scroll", scrollHandler);
   if (route.params.collectionId) {
     if (!profileStore.collectionsItem.length) {
@@ -60,7 +58,6 @@ onMounted(async () => {
           page: profileStore.pageCollectionIndex,
           perPage: 10,
         });
-        isLoading.value = false;
         if (res.errors) {
           error.value = "Возникла ошибка";
         } else if (res.response.results.length) {
@@ -69,12 +66,12 @@ onMounted(async () => {
           error.value = "Нет фото или все фото по подписке";
         }
       } catch (e) {
-        isLoading.value = false;
-        error.value = "Ошибка сети";
+        error.value = "Ошибка се	ти";
         console.log(e);
       }
     }
   }
+  isLoading.value = false;
 });
 onUnmounted(() => {
   document.removeEventListener("scroll", scrollHandler);
@@ -100,7 +97,7 @@ onUnmounted(() => {
         {{ profileStore.userInfo?.name }}
       </span>
     </a>
-    <div v-if="isLoading" class="mb-[20px]">Загрузка</div>
+    <div v-if="isLoading" class="mb-[20px]">Загрузка...</div>
     <div v-else-if="error" class="mb-[20px]">{{ error }}</div>
     <div v-else>
       <div class="gallery">

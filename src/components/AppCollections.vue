@@ -27,7 +27,6 @@ const scrollHandler = async () => {
         page: profileStore.pageTabCollectionsIndex,
         perPage: 10,
       });
-      isLoading.value = true;
       if (res.errors) {
         error.value = "Возникла ошибка";
       } else if (res.response.results.length) {
@@ -51,8 +50,8 @@ const scrollHandler = async () => {
 // Hooks
 onMounted(async () => {
   document.addEventListener("scroll", scrollHandler);
+  isLoading.value = false;
   if (profileStore.collectionsItem.length) {
-    isLoading.value = false;
   } else {
     try {
       const res = await api.users.getCollections({
@@ -80,7 +79,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="text-[18px]">Загрузка..</div>
+  <div v-if="isLoading" class="text-[18px]">Загрузка...</div>
   <div v-else-if="error" class="text-[18px]">{{ error }}</div>
   <template v-else>
     <AppCollectionsGrid />
