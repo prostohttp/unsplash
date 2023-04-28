@@ -33,6 +33,8 @@ const callback = async (entries) => {
             ...profileStore.userLikes,
             ...res.response.results,
           ]);
+        } else {
+          error.value = "Нет фото";
         }
       } catch (e) {
         error.value = "Ошибка сети";
@@ -58,7 +60,7 @@ onMounted(() => {
 
 <template>
   <div class="relative">
-    <div v-if="error" class="text-[18px]">{{ error }}</div>
+    <div v-if="error" class="text-[16px]">{{ error }}</div>
     <div class="relative h-full" v-else>
       <AppPhotosGrid
         :items="profileStore.userLikes"

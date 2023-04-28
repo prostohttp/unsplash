@@ -26,11 +26,13 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
         profileStore.pageTabCollectionsIndex + 1;
       if (res.errors) {
         error.value = "Возникла ошибка";
-      } else {
+      } else if (res.response.results.length) {
         profileStore.setCollections([
           ...profileStore.userCollections,
           ...res.response.results,
         ]);
+      } else {
+        error.value = "Нет коллекций";
       }
     } catch (e) {
       error.value = "Ошибка сети";
@@ -42,7 +44,7 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
 </script>
 
 <template>
-  <div v-if="error" class="text-[18px]">{{ error }}</div>
+  <div v-if="error" class="text-[16px]">{{ error }}</div>
   <div class="relative h-full" v-else ref="root">
     <AppCollectionsGrid />
     <div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
