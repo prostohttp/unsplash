@@ -31,8 +31,8 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
           ...profileStore.userCollections,
           ...res.response.results,
         ]);
-      } else {
-        error.value = "Нет коллекций";
+      } else if (!profileStore.userCollections.length) {
+        error.value = " Нет коллекций";
       }
     } catch (e) {
       error.value = "Ошибка сети";

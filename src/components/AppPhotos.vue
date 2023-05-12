@@ -32,7 +32,7 @@ const callback = async (entries) => {
             ...profileStore.userPhotos,
             ...res.response.results,
           ]);
-        } else {
+        } else if (!profileStore.userPhotos.length) {
           error.value = " Нет фото";
         }
       } catch (e) {

@@ -33,8 +33,8 @@ const callback = async (entries) => {
             ...profileStore.userLikes,
             ...res.response.results,
           ]);
-        } else {
-          error.value = "Нет фото";
+        } else if (!profileStore.userLikes.length) {
+          error.value = " Нет фото";
         }
       } catch (e) {
         error.value = "Ошибка сети";

@@ -112,7 +112,7 @@ onMounted(() => {
     </div>
     <div
       ref="target"
-      class="target absolute bottom-0 -z-[1] h-[500px] w-full"
+      class="target absolute bottom-0 -z-[1] h-[100px] w-full"
     ></div>
     <a
       href=""
