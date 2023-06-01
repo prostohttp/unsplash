@@ -72,7 +72,7 @@ onMounted(() => {
     </div>
     <div
       ref="target"
-      class="target absolute bottom-0 -z-[1] h-[700px] w-full"
+      class="target absolute bottom-0 -z-[1] h-[200px] w-full"
     ></div>
   </div>
 </template>
