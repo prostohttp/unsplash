@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { UseImage } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
-import { numWord } from "@/helpers/functons.js";
+import { numWord } from "@/helpers/functions.js";
 import likeIcon from "~/svg/notifications-icon.svg";
 import { useProfileStore } from "@/stores/profile.js";
 
@@ -86,3 +86,4 @@ onMounted(async () => {
     </a>
   </div>
 </template>
+@/helpers/functions.js

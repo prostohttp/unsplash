@@ -1,5 +1,5 @@
 <script setup>
-import { getDateDiff, numWord } from "@/helpers/functons.js";
+import { getDateDiff, numWord } from "@/helpers/functions.js";
 import likeIcon from "~/svg/notifications-icon.svg";
 
 // vars
@@ -69,3 +69,4 @@ const likeHandler = () => {
     </div>
   </div>
 </template>
+@/helpers/functions.js

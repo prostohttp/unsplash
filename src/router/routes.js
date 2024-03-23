@@ -1,5 +1,4 @@
-import { RouteRecordRaw } from "vue-router";
-export const routes: ReadonlyArray<RouteRecordRaw> = [
+export const routes = [
   {
     path: "/",
     component: () => import("../views/Home.vue"),

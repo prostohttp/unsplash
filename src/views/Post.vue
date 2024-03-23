@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { UseImage } from "@vueuse/components";
 import { authRequest } from "@/api/unsplash.js";
-import { numWord } from "@/helpers/functons.js";
+import { numWord } from "@/helpers/functions.js";
 import { usePostStore } from "@/stores/post.js";
 import likeIcon from "~/svg/notifications-icon.svg";
 
@@ -123,3 +123,4 @@ onBeforeMount(async () => {
     </router-link>
   </div>
 </template>
+@/helpers/functions.js

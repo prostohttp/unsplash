@@ -1,2 +1,2 @@
-export unsplash from "@/api/unsplash.js";
-export firebase from "@/api/firebase.js";
+export {authRequest} from "@/api/unsplash.js";
+export {firebase} from "@/api/firebase.js";
