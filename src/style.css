@@ -8,43 +8,41 @@
 	}
 
 	input[type="text"] {
-		@apply w-[268px] rounded-[8px] bg-[#efefef] py-[10px] pl-[25px] pr-[16px] text-[16px] text-[#000000] placeholder-[#737373] outline-none
+		@apply w-[268px] rounded-[8px] bg-[#efefef] py-[10px] pl-[25px] pr-[16px] text-[16px] text-[#000000] placeholder-[#737373] outline-none;
 	}
 
 	button {
-		@apply text-center bg-accent text-white px-[40px] py-[10px] rounded-[8px]
+		@apply text-center bg-accent text-white px-[40px] py-[10px] rounded-[8px];
 	}
 }
 
 @layer components {
 	.menu-icon {
-		@apply flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px]
+		@apply flex h-full w-[48px] scale-100 items-center justify-center hover:bg-[#f2f2f2] iphone:h-[48px] mac:w-full mac:justify-start mac:gap-[15px] mac:rounded-[8px] mac:p-[12px];
 	}
 	.menu-icon svg:first-of-type {
-		@apply hidden
+		@apply hidden;
 	}
 	.menu-icon svg:last-of-type {
-		@apply flex
+		@apply flex;
 	}
 	.menu-icon.router-link-active svg:first-of-type {
-		@apply flex
+		@apply flex;
 	}
 	.menu-icon.router-link-active svg:last-of-type {
-		@apply hidden
+		@apply hidden;
 	}
 	.active svg {
-		@apply fill-[#111]
+		@apply fill-[#111];
 	}
 	.active span {
-		@apply text-[#111]
+		@apply text-[#111];
 	}
-
 }
 
 @layer utilities {
-
 }
 
 .router-link-active span {
-	@apply font-bold
+	@apply font-bold;
 }

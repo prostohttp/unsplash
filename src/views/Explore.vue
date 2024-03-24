@@ -1,5 +1,5 @@
 <script setup></script>
 
 <template>
-  <div>Explore</div>
+	<div>Explore</div>
 </template>

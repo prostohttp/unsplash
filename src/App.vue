@@ -12,27 +12,27 @@ const route = useRoute();
 const loading = ref(true);
 // Handlers
 const layout = computed(() => {
-  layouts.forEach((layout) => {
-    if (layout.__name === route.meta.layout) layoutRef.value = layout;
-  });
-  return layoutRef.value;
+	layouts.forEach((layout) => {
+		if (layout.__name === route.meta.layout) layoutRef.value = layout;
+	});
+	return layoutRef.value;
 });
 // Hooks
 onMounted(() => {
-  setTimeout(() => {
-    loading.value = false;
-  }, 1000);
+	setTimeout(() => {
+		loading.value = false;
+	}, 1000);
 });
 </script>
 
 <template>
-  <div
-    class="flex h-screen w-screen items-center justify-center"
-    v-if="loading"
-  >
-    <img :src="logo" alt="Россграм" class="h-[60px]" />
-  </div>
-  <component :is="layout" v-else>
-    <router-view />
-  </component>
+	<div
+		class="flex h-screen w-screen items-center justify-center"
+		v-if="loading"
+	>
+		<img :src="logo" alt="Россграм" class="h-[60px]" />
+	</div>
+	<component :is="layout" v-else>
+		<router-view />
+	</component>
 </template>

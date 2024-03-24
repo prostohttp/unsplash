@@ -9,26 +9,26 @@ const postStore = usePostStore();
 const { setRouteNameForHash } = postStore;
 // Vars
 const { feeds, routeName } = defineProps({
-  feeds: {
-    type: Array,
-    required: true,
-  },
-  routeName: {
-    type: String,
-    required: false,
-    default: "home",
-  },
-  routeQuery: {
-    required: false,
-  },
+	feeds: {
+		type: Array,
+		required: true,
+	},
+	routeName: {
+		type: String,
+		required: false,
+		default: "home",
+	},
+	routeQuery: {
+		required: false,
+	},
 });
 onMounted(() => {
-  setRouteNameForHash(routeName);
+	setRouteNameForHash(routeName);
 });
 </script>
 
 <template>
-  <div>
-    <AppFeedItem v-for="item in feeds" :key="item.id" :item="item" />
-  </div>
+	<div>
+		<AppFeedItem v-for="item in feeds" :key="item.id" :item="item" />
+	</div>
 </template>

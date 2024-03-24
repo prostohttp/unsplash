@@ -1,5 +1,5 @@
 <script setup></script>
 
 <template>
-  <div>Notifications</div>
+	<div>Notifications</div>
 </template>

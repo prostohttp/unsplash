@@ -1,3 +1,1 @@
-export const firebase  = () => {
-
-}
+export const firebase = () => {};

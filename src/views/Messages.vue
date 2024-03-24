@@ -1,5 +1,5 @@
 <script setup></script>
 
 <template>
-  <div>Messages</div>
+	<div>Messages</div>
 </template>

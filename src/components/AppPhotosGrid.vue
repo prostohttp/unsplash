@@ -1,21 +1,21 @@
 <script setup>
-	import AppPhotosGridItem from "@/components/AppPhotosGridItem.vue";
+import AppPhotosGridItem from "@/components/AppPhotosGridItem.vue";
 
-	//Stores
-	// Vars
-	const { items, route } = defineProps({
-		items: {
-			type: Array,
-			required: true,
-		},
-		route: {
-			type: Object,
-			required: true,
-		},
-	});
+//Stores
+// Vars
+const { items, route } = defineProps({
+	items: {
+		type: Array,
+		required: true,
+	},
+	route: {
+		type: Object,
+		required: true,
+	},
+});
 
-	// Handlers
-	// Hooks
+// Handlers
+// Hooks
 </script>
 
 <template>
