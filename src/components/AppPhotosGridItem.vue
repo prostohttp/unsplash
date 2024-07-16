@@ -28,7 +28,7 @@ const { item } = defineProps({
 			},
 		}"
 		:id="item.id"
-		class="masonry-image"
+		class="masonry-image iphone:w-auto w-full"
 	>
 		<img
 			:src="item.urls.small"

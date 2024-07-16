@@ -3,6 +3,7 @@ import { onMounted, ref, shallowRef, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { authRequest } from "@/api/unsplash.js";
 import AppFeed from "@/components/AppFeed.vue";
+import AppFeedVirtualScroller from "@/components/AppFeedVirtualScroller.vue";
 import { usePostStore } from "@/stores/post.js";
 import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 
@@ -10,11 +11,9 @@ import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 const postStore = usePostStore();
 // Vars
 const api = authRequest();
-const root = ref(null);
 const posts = ref([]);
 const error = ref("");
 const route = useRoute();
-const router = useRouter();
 const isEnd = ref("");
 const endTrigger = ref(false);
 const target = ref(null);
@@ -61,7 +60,7 @@ onMounted(() => {
 <template>
 	<div class="flex iphone:gap-[50px]">
 		<div class="relative h-full min-w-[400px]">
-			<h2 class="text-center text-[22px]" v-if="error">{{ error }}</h2>
+			<h2 v-if="error" class="text-center text-[22px]">{{ error }}</h2>
 			<AppFeed v-else :feeds="postStore.posts" :route-name="route.name" />
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
 			<div v-if="isEnd" class="max-w-[1280px] text-center">

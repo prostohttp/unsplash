@@ -19,7 +19,7 @@ const isLoading = ref(true);
 const isFull = ref(false);
 // Handlers
 const likeHandler = () => {
-	alert("Здесь мог быть твой лайк");
+	alert("Лайк не предусмотрен API");
 };
 // Hooks
 onMounted(async () => {
