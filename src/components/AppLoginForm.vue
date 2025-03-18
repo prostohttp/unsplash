@@ -66,7 +66,7 @@ const loginHandler = handleSubmit(async () => {
 				class="mt-[20px] disabled:bg-grey disabled:text-black"
 				:disabled="!meta.valid"
 			>
-				Найти меня на unsplash
+				Найти на unsplash
 			</button>
 		</form>
 	</div>
