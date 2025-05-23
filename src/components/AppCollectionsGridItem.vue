@@ -83,7 +83,7 @@ const { item } = defineProps({
 				</a>
 			</span>
 		</div>
-		<div class="flex flex-wrap gap-[9px]" v-if="item.tags?.length">
+		<div class="flex flex-wrap gap-[9px]" v-if="item.tags">
 			<span
 				v-for="tag in item.tags"
 				class="flex rounded-[2px] bg-[#eee] px-[8px] text-[14px] capitalize text-[#767676]"
