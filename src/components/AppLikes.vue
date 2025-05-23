@@ -20,21 +20,29 @@ const callback = async (entries) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
 			isLazyLoading.value = true;
+			let res;
 			try {
-				const res = await api.users.getLikes({
-					username: localStorage.getItem("isAuth"),
-					page: profileStore.pageTabLikesIndex,
-				});
-				profileStore.pageTabLikesIndex = profileStore.pageTabLikesIndex + 1;
-				if (res.errors) {
-					error.value = "Возникла ошибка";
-				} else if (res.response.results.length) {
-					profileStore.setLikes([
-						...profileStore.userLikes,
-						...res.response.results,
-					]);
-				} else if (!profileStore.userLikes.length) {
-					error.value = " Нет фото";
+				if (!isEnd.value) {
+					res = await api.users.getLikes({
+						username: localStorage.getItem("isAuth"),
+						page: profileStore.pageTabLikesIndex,
+					});
+
+					if (!res.response.results.length) {
+						isEnd.value = true;
+					}
+
+					profileStore.pageTabLikesIndex =
+						profileStore.pageTabLikesIndex + 1;
+
+					if (res.errors) {
+						error.value = "Возникла ошибка";
+					} else if (res.response.results.length) {
+						profileStore.setLikes([
+							...profileStore.userLikes,
+							...res.response.results,
+						]);
+					}
 				}
 			} catch (e) {
 				error.value = "Ошибка сети";
@@ -64,11 +72,15 @@ onMounted(() => {
 		<div class="relative h-full" v-else>
 			<AppPhotosGrid
 				:items="profileStore.userLikes"
-				:route="{ name: 'profile-like', param: 'like', tab: 'tab-likes' }"
+				:route="{
+					name: 'profile-like',
+					param: 'like',
+					tab: 'tab-likes',
+				}"
 			/>
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
 			<div v-if="isEnd" class="max-w-[1280px] text-center">
-				{{ isEnd }}
+				Нет фото
 			</div>
 		</div>
 		<div

@@ -19,25 +19,31 @@ const callback = async (entries) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
 			isLazyLoading.value = true;
+			let res;
 			try {
-				const res = await api.users.getPhotos({
-					username: localStorage.getItem("isAuth"),
-					page: profileStore.pageTabPhotosIndex,
-				});
-				profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
-				if (res.errors) {
-					error.value = "Возникла ошибка";
-				} else if (res.response.results.length) {
-					profileStore.setPhotos([
-						...profileStore.userPhotos,
-						...res.response.results,
-					]);
-				} else if (!profileStore.userPhotos.length) {
-					error.value = " Нет фото";
+				if (!isEnd.value) {
+					res = await api.users.getPhotos({
+						username: localStorage.getItem("isAuth"),
+						page: profileStore.pageTabPhotosIndex,
+					});
+
+					if (!res.response.results.length) {
+						isEnd.value = true;
+					}
+
+					profileStore.pageTabPhotosIndex =
+						profileStore.pageTabPhotosIndex + 1;
+					if (res.errors) {
+						error.value = "Возникла ошибка";
+					} else if (res.response.results.length) {
+						profileStore.setPhotos([
+							...profileStore.userPhotos,
+							...res.response.results,
+						]);
+					}
 				}
 			} catch (e) {
 				error.value = "Ошибка сети";
-				console.log(e);
 			}
 			isLazyLoading.value = false;
 		}
@@ -63,11 +69,15 @@ onMounted(() => {
 		<div class="relative h-full" v-else>
 			<AppPhotosGrid
 				:items="profileStore.userPhotos"
-				:route="{ name: 'profile-photo', param: 'photo', tab: 'tab-photos' }"
+				:route="{
+					name: 'profile-photo',
+					param: 'photo',
+					tab: 'tab-photos',
+				}"
 			/>
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
 			<div v-if="isEnd" class="max-w-[1280px] text-center">
-				{{ isEnd }}
+				Фото больше нет
 			</div>
 		</div>
 		<div

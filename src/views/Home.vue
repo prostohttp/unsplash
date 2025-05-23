@@ -1,9 +1,8 @@
 <script setup>
 import { onMounted, ref, shallowRef, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { authRequest } from "@/api/unsplash.js";
 import AppFeed from "@/components/AppFeed.vue";
-import AppFeedVirtualScroller from "@/components/AppFeedVirtualScroller.vue";
 import { usePostStore } from "@/stores/post.js";
 import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 
@@ -14,7 +13,7 @@ const api = authRequest();
 const posts = ref([]);
 const error = ref("");
 const route = useRoute();
-const isEnd = ref("");
+const isEnd = ref(false);
 const endTrigger = ref(false);
 const target = ref(null);
 const observer = shallowRef();
@@ -24,22 +23,28 @@ const isLazyLoading = ref(false);
 const callback = async (entries) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
+			let res;
 			try {
 				isLazyLoading.value = true;
-				const res = await api.photos.list({ page: postStore.pageIndex });
+
+				res = await api.photos.list({ page: postStore.pageIndex });
+
+				if (!res.response.results.length) {
+					isEnd.value = true;
+				}
+
 				postStore.pageIndex = postStore.pageIndex + 1;
+
 				if (res.errors) {
 					error.value = "Ошибка при загрузке ленты фотографий";
 				} else if (res.response.results.length) {
 					posts.value = [...posts.value, ...res.response.results];
 					postStore.setPosts(posts.value);
-				} else {
-					console.log("Больше картинок нет");
 				}
+				isLazyLoading.value = false;
 			} catch (e) {
 				console.log(e);
 			}
-			isLazyLoading.value = false;
 		}
 	}
 };
@@ -63,9 +68,7 @@ onMounted(() => {
 			<h2 v-if="error" class="text-center text-[22px]">{{ error }}</h2>
 			<AppFeed v-else :feeds="postStore.posts" :route-name="route.name" />
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
-			<div v-if="isEnd" class="max-w-[1280px] text-center">
-				{{ isEnd }}
-			</div>
+			<div v-if="isEnd" class="max-w-[1280px] text-center">Фото нет</div>
 		</div>
 		<div
 			ref="target"
