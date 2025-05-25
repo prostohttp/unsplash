@@ -10,5 +10,10 @@ export const useSearchStore = defineStore("search", () => {
 	const setLocalSearchList = (list) => {
 		localSearchList.value = list;
 	};
-	return { search, setSearch, localSearchList, setLocalSearchList };
+	return {
+		search,
+		localSearchList,
+		setSearch,
+		setLocalSearchList,
+	};
 });

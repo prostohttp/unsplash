@@ -27,7 +27,7 @@ onMounted(() => {
 
 <template>
 	<div
-		class="flex h-screen w-screen items-center justify-center"
+		class="flex h-lvh w-screen items-center justify-center"
 		v-if="loading"
 	>
 		<img :src="logo" alt="Россграм" class="h-[60px]" />

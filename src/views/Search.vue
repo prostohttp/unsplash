@@ -137,14 +137,16 @@ onMounted(async () => {
 	}
 });
 
-watch(route, async () => {
-	searchValue.value = route.query.s;
+watch(() => route.query.s, async () => {
+	const searchQuery = route.query.s
+	searchValue.value = searchQuery;
 
 	await searchHandler();
-	if (route.query.s) {
-		setRouteQueryForHash(route.query.s);
+	if (searchQuery) {
+		setRouteQueryForHash(searchQuery);
 	}
 });
+
 watch(endTrigger, () => {
 	if (endTrigger.value) {
 		observer.value.disconnect();

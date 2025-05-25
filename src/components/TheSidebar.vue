@@ -46,7 +46,7 @@ onMounted(async () => {
 
 <template>
 	<div
-		class="fixed bottom-0 left-0 flex h-[60px] w-full items-center justify-evenly gap-[15px] border-t border-t-grey bg-white pb-[10px] iphone:h-screen iphone:w-[70px] iphone:flex-col iphone:justify-start iphone:gap-[15px] iphone:border-r iphone:border-t-0 iphone:border-grey iphone:pb-[20px] ipad:overflow-y-auto mac:w-[244px] mac:items-start mac:px-[12px] mac:pt-[8px] imac:w-[335px]"
+		class="fixed bottom-0 left-0 flex h-[60px] w-full items-center justify-evenly gap-[15px] border-t border-t-grey bg-white pb-[10px] iphone:h-lvh iphone:w-[70px] iphone:flex-col iphone:justify-start iphone:gap-[15px] iphone:border-r iphone:border-t-0 iphone:border-grey iphone:pb-[20px] ipad:overflow-y-auto mac:w-[244px] mac:items-start mac:px-[12px] mac:pt-[8px] imac:w-[335px]"
 	>
 		<router-link
 			:to="{ name: 'home' }"

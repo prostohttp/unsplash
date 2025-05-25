@@ -39,19 +39,19 @@ export const useProfileStore = defineStore("profile", () => {
 	};
 	return {
 		userInfo,
-		setUser,
 		pageTabPhotosIndex,
 		pageTabLikesIndex,
 		pageTabCollectionsIndex,
 		userPhotos,
 		userLikes,
 		userCollections,
+		collectionsItem,
+		pageCollectionIndex,
+		setUser,
 		setPhotos,
 		setLikes,
 		setCollections,
 		resetState,
-		collectionsItem,
 		setCollectionsItem,
-		pageCollectionIndex,
 	};
 });

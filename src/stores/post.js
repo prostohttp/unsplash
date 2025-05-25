@@ -20,12 +20,12 @@ export const usePostStore = defineStore("post", () => {
 	};
 	return {
 		posts,
-		setPosts,
 		routeNameForHash,
 		routeQueryForHash,
-		setRouteNameForHash,
-		setRouteQueryForHash,
 		pageIndex,
 		pageSearchIndex,
+		setRouteNameForHash,
+		setRouteQueryForHash,
+		setPosts,
 	};
 });

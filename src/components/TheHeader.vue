@@ -3,7 +3,7 @@ import fullLogo from "~/svg/logo-big.svg";
 import notifIcon from "~/svg/notifications-icon.svg";
 import { useField } from "vee-validate";
 import { useRoute, useRouter } from "vue-router";
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 import AppSearch from "@/components/AppSearch.vue";
 
 // Vars
@@ -19,9 +19,17 @@ const onSubmit = () => {
 		},
 	});
 };
-watch(route, (value) => {
-	searchValue.value = value.query.s;
+// Hooks
+onMounted(() => {
+	searchValue.value = route.query.s;
 });
+
+watch(
+	() => route.query.s,
+	(value) => {
+		searchValue.value = value;
+	}
+);
 </script>
 
 <template>
@@ -32,7 +40,10 @@ watch(route, (value) => {
 			<img :src="fullLogo" alt="Россграм" class="h-[30px]" />
 		</router-link>
 		<form @submit.prevent="onSubmit" class="relative">
-			<AppSearch v-model="searchValue" class="w-[230px] iphone:w-[268px]" />
+			<AppSearch
+				v-model="searchValue"
+				class="w-[230px] iphone:w-[268px]"
+			/>
 		</form>
 		<img :src="notifIcon" alt="notifications" />
 	</div>
