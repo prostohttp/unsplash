@@ -7,7 +7,6 @@ import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 // Stores
 const profileStore = useProfileStore();
 // Vars
-const root = ref(null);
 const api = authRequest();
 const isLazyLoading = ref(false);
 const error = ref("");
@@ -69,7 +68,7 @@ onMounted(() => {
 <template>
 	<div class="relative">
 		<div v-if="error" class="text-[16px]">{{ error }}</div>
-		<div class="relative h-full" v-else>
+		<div v-else class="relative h-full">
 			<AppPhotosGrid
 				:items="profileStore.userLikes"
 				:route="{
@@ -79,9 +78,7 @@ onMounted(() => {
 				}"
 			/>
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
-			<div v-if="isEnd" class="max-w-[1280px] text-center">
-				Нет фото
-			</div>
+			<div v-if="isEnd" class="max-w-[1280px] text-center">Нет фото</div>
 		</div>
 		<div
 			ref="target"
