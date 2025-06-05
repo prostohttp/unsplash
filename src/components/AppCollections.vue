@@ -45,12 +45,12 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
 
 <template>
 	<div v-if="error" class="text-[16px]">{{ error }}</div>
-	<div class="relative h-full" v-else ref="root">
+	<div v-else ref="root" class="relative h-full">
 		<AppCollectionsGrid />
 		<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
 		<div
-			class="observer bottom-[300px] left-0 h-[1px] w-full"
 			v-intersection-observer="[onIntersectionObserver, { root }]"
+			class="observer bottom-[300px] left-0 h-[1px] w-full"
 		></div>
 	</div>
 </template>
