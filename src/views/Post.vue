@@ -47,17 +47,21 @@ onBeforeMount(async () => {
 			>
 				<a
 					:href="photo.user.links.html"
-					target="_blank"
 					class="border-[2px] border-white"
+					target="_blank"
 				>
 					<img
-						:src="photo.user.profile_image.large"
 						:alt="photo.user.name"
+						:src="photo.user.profile_image.large"
 						class="h-[35px] w-[35px] rounded-full object-cover object-center"
 					/>
 				</a>
 			</div>
-			<a :href="photo.user.links.html" target="_blank" class="font-semibold">
+			<a
+				:href="photo.user.links.html"
+				class="font-semibold"
+				target="_blank"
+			>
 				{{ photo.user.name }}
 			</a>
 			<span class="text-dark-grey">
@@ -68,8 +72,8 @@ onBeforeMount(async () => {
 		<div class="overflow-hidden rounded-[3px]">
 			<UseImage
 				v-if="isFull"
-				:src="photo.urls.full"
 				:alt="photo.alt_description"
+				:src="photo.urls.full"
 				class="h-auto w-full cursor-zoom-out rounded-[3px]"
 				@click="isFull = !isFull"
 			>
@@ -78,12 +82,12 @@ onBeforeMount(async () => {
 						Загрузка фото...
 					</div>
 				</template>
-				<template #error> Ошибка загрузки фото </template>
+				<template #error> Ошибка загрузки фото</template>
 			</UseImage>
 			<img
 				v-else
-				:src="photo.urls.small"
 				:alt="photo.alt_description"
+				:src="photo.urls.small"
 				class="w-auto cursor-zoom-in rounded-[3px]"
 				@click="isFull = !isFull"
 			/>
@@ -91,8 +95,8 @@ onBeforeMount(async () => {
 		<div class="border-b border-grey pb-[20px]">
 			<div class="mb-[15px] mt-[5px] flex">
 				<a
-					@click.prevent="likeHandler"
 					class="flex items-center justify-center"
+					@click.prevent="likeHandler"
 				>
 					<img :src="likeIcon" alt="like" class="cursor-pointer" />
 				</a>

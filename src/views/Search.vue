@@ -137,15 +137,18 @@ onMounted(async () => {
 	}
 });
 
-watch(() => route.query.s, async () => {
-	const searchQuery = route.query.s
-	searchValue.value = searchQuery;
+watch(
+	() => route.query.s,
+	async () => {
+		const searchQuery = route.query.s;
+		searchValue.value = searchQuery;
 
-	await searchHandler();
-	if (searchQuery) {
-		setRouteQueryForHash(searchQuery);
+		await searchHandler();
+		if (searchQuery) {
+			setRouteQueryForHash(searchQuery);
+		}
 	}
-});
+);
 
 watch(endTrigger, () => {
 	if (endTrigger.value) {
@@ -160,8 +163,8 @@ watch(endTrigger, () => {
 			class="relative h-full pt-[12px] iphone:min-w-[350px] ipad:min-w-[400px]"
 		>
 			<form
-				@submit.prevent="onSubmit"
 				class="relative hidden iphone:flex"
+				@submit.prevent="onSubmit"
 			>
 				<AppSearch v-model="searchValue" class="w-full" />
 			</form>

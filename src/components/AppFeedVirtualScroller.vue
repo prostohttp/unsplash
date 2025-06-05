@@ -34,9 +34,9 @@ onMounted(() => {
 		<DynamicScroller :items="feeds" :min-item-size="54" class="scroller">
 			<template v-slot="{ item, index, active }">
 				<AppFeedItemVirtualScroller
+					:key="item.id"
 					:active="active"
 					:index="index"
-					:key="item.id"
 					:item="item"
 				/>
 			</template>

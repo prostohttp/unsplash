@@ -112,14 +112,6 @@ export const routes = [
 			layout: "FullWidth",
 		},
 	},
-	// {
-	//   path: "/profile/:user/:tab/:collection",
-	//   component: () => import("../views/ProfileCollection.vue"),
-	//   name: "profile-collection",
-	//   meta: {
-	//     layout: "FullWidth",
-	//   },
-	// },
 	{
 		path: "/profile/:user/:tab/:collection/:collectionId",
 		component: () => import("../views/ProfileCollectionItem.vue"),
