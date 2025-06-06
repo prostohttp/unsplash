@@ -1,15 +1,15 @@
 <script setup>
-import { authRequest } from "@/api/unsplash.js";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
+
 // Vars
-const api = authRequest();
 const isLoading = ref(true);
 const error = ref("");
+
 // Handlers
 const scrollHandler = async () => {
 	let documentHeight = document.body.scrollHeight;
@@ -17,11 +17,14 @@ const scrollHandler = async () => {
 	let modifier = 1;
 	if (currentScroll + modifier >= documentHeight) {
 		try {
-			profileStore.pageTabPhotosIndex = profileStore.pageTabPhotosIndex + 1;
-			const res = await api.users.getPhotos({
-				username: localStorage.getItem("isAuth"),
-				page: profileStore.pageTabPhotosIndex,
-			});
+			profileStore.pageTabPhotosIndex =
+				profileStore.pageTabPhotosIndex + 1;
+
+			const res = await profileStore.apiUsersGetPhotos(
+				localStorage.getItem("isAuth"),
+				profileStore.pageTabPhotosIndex
+			);
+
 			isLoading.value = true;
 			if (res.errors) {
 				error.value = "Возникла ошибка";
@@ -49,10 +52,11 @@ onMounted(async () => {
 		isLoading.value = false;
 	} else {
 		try {
-			const res = await api.users.getPhotos({
-				username: localStorage.getItem("isAuth"),
-				page: profileStore.pageTabPhotosIndex,
-			});
+			const res = await profileStore.apiUsersGetPhotos(
+				localStorage.getItem("isAuth"),
+				profileStore.pageTabPhotosIndex
+			);
+
 			isLoading.value = false;
 			if (res.errors) {
 				error.value = "Возникла ошибка";

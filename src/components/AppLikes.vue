@@ -1,13 +1,11 @@
 <script setup>
 import { onMounted, ref, shallowRef, watch } from "vue";
-import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
 // Vars
-const api = authRequest();
 const isLazyLoading = ref(false);
 const error = ref("");
 const isEnd = ref("");
@@ -22,10 +20,10 @@ const callback = async (entries) => {
 			let res;
 			try {
 				if (!isEnd.value) {
-					res = await api.users.getLikes({
-						username: localStorage.getItem("isAuth"),
-						page: profileStore.pageTabLikesIndex,
-					});
+					res = await profileStore.apiUsersGetLikes(
+						localStorage.getItem("isAuth"),
+						profileStore.pageTabLikesIndex
+					);
 
 					if (!res.response.results.length) {
 						isEnd.value = true;

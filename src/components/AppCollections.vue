@@ -1,14 +1,12 @@
 <script setup>
 import { ref } from "vue";
 import { vIntersectionObserver } from "@vueuse/components";
-import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppCollectionsGrid from "@/components/AppCollectionsGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
 // Vars
-const api = authRequest();
 const root = ref(null);
 const isLazyLoading = ref(false);
 const error = ref("");
@@ -17,11 +15,13 @@ const onIntersectionObserver = async ([{ isIntersecting }]) => {
 	if (isIntersecting) {
 		try {
 			isLazyLoading.value = true;
-			const res = await api.users.getCollections({
-				username: localStorage.getItem("isAuth"),
-				page: profileStore.pageTabCollectionsIndex,
-				perPage: 10,
-			});
+
+			const res = await profileStore.apiUsersGetCollections(
+				localStorage.getItem("isAuth"),
+				profileStore.pageTabCollectionsIndex,
+				10
+			);
+
 			profileStore.pageTabCollectionsIndex =
 				profileStore.pageTabCollectionsIndex + 1;
 			if (res.errors) {

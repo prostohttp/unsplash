@@ -1,15 +1,14 @@
 <script setup>
 import { onMounted, ref, shallowRef, watch } from "vue";
 import { useRoute } from "vue-router";
-import { authRequest } from "@/api/unsplash.js";
 import AppFeed from "@/components/AppFeed.vue";
 import { usePostStore } from "@/stores/post.js";
 import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 
 // Stores
 const postStore = usePostStore();
+
 // Vars
-const api = authRequest();
 const posts = ref([]);
 const error = ref("");
 const route = useRoute();
@@ -27,9 +26,11 @@ const callback = async (entries) => {
 			let res;
 			try {
 				isLazyLoading.value = true;
-				const rawData = await api.photos.list({
-					page: postStore.pageIndex,
-				});
+
+				const rawData = await postStore.apiPhotosList(
+					postStore.pageIndex
+				);
+
 				if (firstFeed.value) {
 					res = rawData.response.results;
 					firstFeed.value = false;
@@ -54,6 +55,7 @@ const callback = async (entries) => {
 		}
 	}
 };
+
 // Hooks
 watch(endTrigger, () => {
 	if (endTrigger.value) {

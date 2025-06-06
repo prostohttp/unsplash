@@ -3,7 +3,6 @@ import logoSmall from "~/svg/logo-small.svg";
 import logoBig from "~/svg/logo-big.svg";
 import userPlaceholder from "~/svg/user-placeholder.svg";
 import { useProfileStore } from "@/stores/profile.js";
-import { authRequest } from "@/api/unsplash.js";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import HomeActive from "@/components/icons/HomeActive.vue";
@@ -23,17 +22,15 @@ import Notifications from "@/components/icons/Notifications.vue";
 
 // Stores
 const profileStore = useProfileStore();
-// Vars
-const api = authRequest();
-const router = useRouter();
 
-// Handlers
+// Vars
+const router = useRouter();
 
 // Hooks
 onMounted(async () => {
 	const username = localStorage.getItem("isAuth");
 	if (username) {
-		const res = await api.users.get({ username: username });
+		const res = await profileStore.apiUsersGet(username);
 		if (res.errors) {
 			localStorage.removeItem("isAuth");
 			await router.push({ name: "auth" });
@@ -60,7 +57,10 @@ onMounted(async () => {
 			<Home />
 			<span class="hidden mac:flex">Главная</span>
 		</router-link>
-		<router-link :to="{ name: 'search' }" class="menu-icon hidden iphone:flex">
+		<router-link
+			:to="{ name: 'search' }"
+			class="menu-icon hidden iphone:flex"
+		>
 			<SearchActive />
 			<Search />
 			<span class="hidden mac:flex">Поиск</span>
@@ -97,7 +97,10 @@ onMounted(async () => {
 			v-if="profileStore.userInfo"
 			:to="{
 				name: 'profile',
-				params: { user: profileStore.userInfo.username, tab: 'tab-photos' },
+				params: {
+					user: profileStore.userInfo.username,
+					tab: 'tab-photos',
+				},
 			}"
 			class="menu-icon"
 		>
@@ -109,7 +112,11 @@ onMounted(async () => {
 			<span class="hidden mac:flex">Профиль</span>
 		</router-link>
 		<router-link v-else :to="{ name: 'auth' }" class="menu-icon">
-			<img :src="userPlaceholder" alt="logo" class="w-[24px] rounded-full" />
+			<img
+				:src="userPlaceholder"
+				alt="logo"
+				class="w-[24px] rounded-full"
+			/>
 			<span class="hidden mac:flex">Войти</span>
 		</router-link>
 	</div>

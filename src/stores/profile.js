@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { authRequest } from "@/api/index.js";
 
 export const useProfileStore = defineStore("profile", () => {
 	// Vars
@@ -12,22 +13,29 @@ export const useProfileStore = defineStore("profile", () => {
 	const pageTabCollectionsIndex = ref(1);
 	const pageCollectionIndex = ref(1);
 	const collectionsItem = ref([]);
+	const api = authRequest();
+
 	// Handlers
 	const setUser = (data) => {
 		userInfo.value = data;
 	};
+
 	const setPhotos = (data) => {
 		userPhotos.value = data;
 	};
+
 	const setLikes = (data) => {
 		userLikes.value = data;
 	};
+
 	const setCollections = (data) => {
 		userCollections.value = data;
 	};
+
 	const setCollectionsItem = (data) => {
 		collectionsItem.value = data;
 	};
+
 	const resetState = () => {
 		userInfo.value = null;
 		userPhotos.value = [];
@@ -37,6 +45,26 @@ export const useProfileStore = defineStore("profile", () => {
 		pageTabLikesIndex.value = 1;
 		pageTabCollectionsIndex.value = 1;
 	};
+
+	const apiUsersGetPhotos = async (username, page = 1) => {
+		return await api.users.getPhotos({
+			username,
+			page,
+		});
+	};
+
+	const apiUsersGetCollections = async (username, page = 1, perPage = 10) => {
+		return await api.users.getCollections({ username, perPage, page });
+	};
+
+	const apiUsersGetLikes = async (username, page = 1) => {
+		return await api.users.getLikes({ username, page });
+	};
+
+	const apiUsersGet = async (username) => {
+		return await api.users.get({ username });
+	};
+
 	return {
 		userInfo,
 		pageTabPhotosIndex,
@@ -53,5 +81,9 @@ export const useProfileStore = defineStore("profile", () => {
 		setCollections,
 		resetState,
 		setCollectionsItem,
+		apiUsersGetPhotos,
+		apiUsersGetCollections,
+		apiUsersGetLikes,
+		apiUsersGet,
 	};
 });

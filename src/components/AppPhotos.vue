@@ -1,19 +1,19 @@
 <script setup>
 import { onMounted, ref, shallowRef, watch } from "vue";
-import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
 const profileStore = useProfileStore();
+
 // Vars
-const api = authRequest();
 const isLazyLoading = ref(false);
 const error = ref("");
 const isEnd = ref("");
 const endTrigger = ref(false);
 const target = ref(null);
 const observer = shallowRef();
+
 // Handlers
 const callback = async (entries) => {
 	for (const { isIntersecting } of entries) {
@@ -22,10 +22,10 @@ const callback = async (entries) => {
 			let res;
 			try {
 				if (!isEnd.value) {
-					res = await api.users.getPhotos({
-						username: localStorage.getItem("isAuth"),
-						page: profileStore.pageTabPhotosIndex,
-					});
+					res = await profileStore.apiUsersGetPhotos(
+						localStorage.getItem("isAuth"),
+						profileStore.pageTabPhotosIndex
+					);
 
 					if (!res.response.results.length) {
 						isEnd.value = true;
@@ -66,7 +66,7 @@ onMounted(() => {
 <template>
 	<div class="relative">
 		<div v-if="error" class="text-[16px]">{{ error }}</div>
-		<div class="relative h-full" v-else>
+		<div v-else class="relative h-full">
 			<AppPhotosGrid
 				:items="profileStore.userPhotos"
 				:route="{

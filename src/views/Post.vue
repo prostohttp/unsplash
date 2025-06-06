@@ -3,7 +3,6 @@ import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { UseImage } from "@vueuse/components";
-import { authRequest } from "@/api/unsplash.js";
 import { numWord } from "@/helpers/functions.js";
 import { usePostStore } from "@/stores/post.js";
 import likeIcon from "~/svg/notifications-icon.svg";
@@ -11,20 +10,23 @@ import likeIcon from "~/svg/notifications-icon.svg";
 // Stores
 const postStore = usePostStore();
 const { routeNameForHash, routeQueryForHash } = storeToRefs(postStore);
+
 // Vars
 const route = useRoute();
-const api = authRequest();
 const photo = ref({});
 const error = ref("");
 const isLoading = ref(true);
 const isFull = ref(false);
+
 // Handlers
 const likeHandler = () => {
 	alert("Лайк не предусмотрен API");
 };
+
 // Hooks
 onBeforeMount(async () => {
-	const res = await api.photos.get({ photoId: route.params.id || "" });
+	const res = await postStore.apiPhotosGet(route.params.id);
+
 	if (res.errors) {
 		error.value = "Не найдена фотография";
 	} else {

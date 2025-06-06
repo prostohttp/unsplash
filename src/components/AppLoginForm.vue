@@ -1,13 +1,13 @@
 <script setup>
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 // Stores
 const profileStore = useProfileStore();
+
 // Vars
 const router = useRouter();
 const error = ref("");
@@ -20,16 +20,12 @@ const {
 	yup.string().required("Обязательное поле").min(3, "Не менее 3 символов")
 );
 const { handleSubmit } = useForm();
-const api = authRequest();
-
-// Handlers
-
-// Hooks
 
 // Handlers
 const loginHandler = handleSubmit(async () => {
 	if (login) {
-		const res = await api.users.get({ username: login.value });
+		const res = await profileStore.apiUsersGet(login.value);
+
 		if (res.errors) {
 			error.value = "Такого пользователя нет, попробуйте еще раз";
 		} else {
@@ -47,14 +43,14 @@ const loginHandler = handleSubmit(async () => {
 
 <template>
 	<div class="flex flex-col">
-		<form @submit="loginHandler" class="flex flex-col">
+		<form class="flex flex-col" @submit="loginHandler">
 			<input
-				type="text"
 				v-model.trim="login"
-				@input="error = ''"
-				placeholder="Введите ваш ник"
-				class="min-w-full"
 				:class="{ 'border border-accent': errorMessage }"
+				class="min-w-full"
+				placeholder="Введите ваш ник"
+				type="text"
+				@input="error = ''"
 			/>
 			<span v-if="errorMessage" class="mt-[4px]">
 				{{ errorMessage }}
@@ -63,8 +59,8 @@ const loginHandler = handleSubmit(async () => {
 				{{ error }}
 			</span>
 			<button
-				class="mt-[20px] disabled:bg-grey disabled:text-black"
 				:disabled="!meta.valid"
+				class="mt-[20px] disabled:bg-grey disabled:text-black"
 			>
 				Найти на unsplash
 			</button>

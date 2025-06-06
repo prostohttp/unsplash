@@ -3,7 +3,6 @@ import { useField } from "vee-validate";
 import { onMounted, ref, shallowRef, watch } from "vue";
 import { storeToRefs } from "pinia";
 import AppFeed from "@/components/AppFeed.vue";
-import { authRequest } from "@/api/unsplash.js";
 import { useRoute, useRouter } from "vue-router";
 import AppSearch from "@/components/AppSearch.vue";
 import { usePostStore } from "@/stores/post.js";
@@ -21,7 +20,6 @@ const route = useRoute();
 const router = useRouter();
 const { value: searchValue } = useField("search");
 const error = ref("");
-const api = authRequest();
 const isLazyLoading = ref(false);
 const isEnd = ref(false);
 const endTrigger = ref(false);
@@ -33,10 +31,7 @@ const initialSearchData = async () => {
 	isEnd.value = false;
 	if (route.query.s) {
 		try {
-			const res = await api.search.getPhotos({
-				query: route.query.s,
-				page: postStore.pageSearchIndex,
-			});
+			const res = await searchStore.apiSearchGetPhotos(route.query.s, 1);
 
 			if (res.errors) {
 				error.value = "Возникла ошибка";
@@ -61,17 +56,16 @@ const callback = async (entries) => {
 					if (!isEnd.value) {
 						isLazyLoading.value = true;
 
-						res = await api.search.getPhotos({
-							query: route.query.s,
-							page: postStore.pageSearchIndex,
-						});
+						postStore.pageSearchIndex++;
+
+						res = await searchStore.apiSearchGetPhotos(
+							route.query.s,
+							postStore.pageSearchIndex
+						);
 
 						if (!res.response.results.length) {
 							isEnd.value = true;
 						}
-
-						postStore.pageSearchIndex =
-							postStore.pageSearchIndex + 1;
 
 						if (res.errors) {
 							error.value = "Возникла ошибка";
@@ -91,14 +85,13 @@ const callback = async (entries) => {
 		}
 	}
 };
+
 const searchHandler = async () => {
 	if (route.query.s) {
 		isEnd.value = false;
 		try {
-			const res = await api.search.getPhotos({
-				query: route.query.s,
-				page: 1,
-			});
+			const res = await searchStore.apiSearchGetPhotos(route.query.s, 1);
+
 			setLocalSearchList([]);
 			if (res.errors) {
 				error.value = "Возникла ошибка";
@@ -180,7 +173,9 @@ watch(endTrigger, () => {
 				{{ error }}
 			</div>
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
-			<div v-if="isEnd" class="max-w-[1280px] text-center">Фото нет</div>
+			<div v-if="isEnd && !error" class="max-w-[1280px] text-center">
+				Фото нет
+			</div>
 			<div
 				ref="target"
 				class="target absolute bottom-0 -z-[1] h-[500px] w-full"
