@@ -18,6 +18,7 @@ const endTrigger = ref(false);
 const target = ref(null);
 const observer = shallowRef();
 const isLazyLoading = ref(false);
+const firstFeed = ref(true);
 
 // Handlers
 const callback = async (entries) => {
@@ -26,19 +27,24 @@ const callback = async (entries) => {
 			let res;
 			try {
 				isLazyLoading.value = true;
-
-				res = await api.photos.list({ page: postStore.pageIndex });
-
-				if (!res.response.results.length) {
-					isEnd.value = true;
+				const rawData = await api.photos.list({
+					page: postStore.pageIndex,
+				});
+				if (firstFeed.value) {
+					res = rawData.response.results;
+					firstFeed.value = false;
+				} else {
+					res = rawData.response.results.slice(1);
+					if (!res.length) {
+						isEnd.value = true;
+					}
 				}
+				postStore.pageIndex++;
 
-				postStore.pageIndex = postStore.pageIndex + 1;
-
-				if (res.errors) {
+				if (rawData.errors) {
 					error.value = "Ошибка при загрузке ленты фотографий";
-				} else if (res.response.results.length) {
-					posts.value = [...posts.value, ...res.response.results];
+				} else if (res.length) {
+					posts.value = [...posts.value, ...res];
 					postStore.setPosts(posts.value);
 				}
 				isLazyLoading.value = false;
