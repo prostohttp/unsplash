@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { UseImage } from "@vueuse/components";
-import { numWord } from "@/helpers/functions.js";
-import { usePostStore } from "@/stores/post.js";
+import { numWord } from "@/helpers/functions.ts";
+import { usePostStore } from "@/stores/post.ts";
 import likeIcon from "~/svg/notifications-icon.svg";
 
 // Stores
@@ -13,7 +13,7 @@ const { routeNameForHash, routeQueryForHash } = storeToRefs(postStore);
 
 // Vars
 const route = useRoute();
-const photo = ref({});
+const photo = ref();
 const error = ref("");
 const isLoading = ref(true);
 const isFull = ref(false);
@@ -25,7 +25,7 @@ const likeHandler = () => {
 
 // Hooks
 onBeforeMount(async () => {
-	const res = await postStore.apiPhotosGet(route.params.id);
+	const res = await postStore.apiPhotosGet(route.params.id as string);
 
 	if (res.errors) {
 		error.value = "Не найдена фотография";
@@ -129,4 +129,3 @@ onBeforeMount(async () => {
 		</router-link>
 	</div>
 </template>
-@/helpers/functions.js

@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { useProfileStore } from "@/stores/profile.js";
 import { onMounted, ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import AppTabs from "@/components/AppTabs.vue";
 import AppPhotos from "@/components/AppPhotos.vue";
 import AppLikes from "@/components/AppLikes.vue";
@@ -9,51 +9,55 @@ import AppCollections from "@/components/AppCollections.vue";
 import TotalPhotos from "@/components/icons/TotalPhotos.vue";
 import TotalLikes from "@/components/icons/TotalLikes.vue";
 import TotalCollections from "@/components/icons/TotalCollections.vue";
+import { type ITab, ITabCount } from "@/types.ts";
 
 // Stores
 const profileStore = useProfileStore();
+
 // Vars
 const error = ref("");
 const router = useRouter();
 const route = useRoute();
-const tabTitles = [
+const tabTitles: ITab[] = [
 	{
 		label: "Фото",
 		name: "tab-photos",
-		count: "total_photos",
+		count: ITabCount["total-photos"],
 		icon: TotalPhotos,
 	},
 	{
 		label: "Лайки",
 		name: "tab-likes",
-		count: "total_likes",
+		count: ITabCount["total_likes"],
 		icon: TotalLikes,
 	},
 	{
 		label: "Коллекции",
 		name: "tab-collections",
-		count: "total_collections",
+		count: ITabCount["total_collections"],
 		icon: TotalCollections,
 	},
 ];
 const tabContents = [AppPhotos, AppLikes, AppCollections];
 const activeTab = ref(0);
+
 // Handlers
 const logoutHandler = () => {
 	localStorage.removeItem("isAuth");
 	profileStore.resetState();
 	router.push({ name: "auth" });
 };
-const changeTab = (index) => {
+const changeTab = (index: number) => {
 	activeTab.value = index;
 	router.push({
 		name: "profile",
 		params: {
-			user: profileStore.userInfo.username,
+			user: profileStore.userInfo?.username,
 			tab: tabTitles[index].name,
 		},
 	});
 };
+
 // Hooks
 onMounted(() => {
 	const tab = route.params.tab;

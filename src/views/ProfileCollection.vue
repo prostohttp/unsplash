@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
@@ -21,7 +21,8 @@ const scrollHandler = async () => {
 				profileStore.pageTabPhotosIndex + 1;
 
 			const res = await profileStore.apiUsersGetPhotos(
-				localStorage.getItem("isAuth"),
+				// Этот роут защищен, поэтому можно использовать! без авторизации сюда не попасть
+				localStorage.getItem("isAuth")!,
 				profileStore.pageTabPhotosIndex
 			);
 
@@ -53,7 +54,8 @@ onMounted(async () => {
 	} else {
 		try {
 			const res = await profileStore.apiUsersGetPhotos(
-				localStorage.getItem("isAuth"),
+				// Этот роут защищен, поэтому можно использовать! без авторизации сюда не попасть
+				localStorage.getItem("isAuth")!,
 				profileStore.pageTabPhotosIndex
 			);
 

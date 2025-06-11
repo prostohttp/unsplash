@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import fullLogo from "~/svg/logo-big.svg";
 import notifIcon from "~/svg/notifications-icon.svg";
 import { useField } from "vee-validate";
@@ -15,7 +15,7 @@ const onSubmit = () => {
 	router.push({
 		name: "search",
 		query: {
-			s: searchValue.value,
+			s: searchValue.value as string,
 		},
 	});
 };

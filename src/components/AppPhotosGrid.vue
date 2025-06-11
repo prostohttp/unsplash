@@ -1,18 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import AppPhotosGridItem from "@/components/AppPhotosGridItem.vue";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 //Stores
 // Vars
-const { items, route } = defineProps({
-	items: {
-		type: Array,
-		required: true,
-	},
+const { items, route } = defineProps<{
+	items?: Basic[];
 	route: {
-		type: Object,
-		required: true,
-	},
-});
+		name: string;
+		param: string;
+		tab?: string;
+	};
+}>();
 
 // Handlers
 // Hooks

@@ -1,12 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import AppCollectionsGridItem from "@/components/AppCollectionsGridItem.vue";
-import { useProfileStore } from "@/stores/profile.js";
+import { useProfileStore } from "@/stores/profile.ts";
 
 //Stores
 const profileStore = useProfileStore();
-// Vars
-// Handlers
-// Hooks
 </script>
 
 <template>

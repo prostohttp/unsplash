@@ -1,6 +1,6 @@
-<script setup>
-import { onMounted, ref, shallowRef, watch } from "vue";
-import { useProfileStore } from "@/stores/profile.js";
+<script setup lang="ts">
+import { onMounted, ref, shallowRef, useTemplateRef, watch } from "vue";
+import { useProfileStore } from "@/stores/profile.ts";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
 // Stores
@@ -9,13 +9,13 @@ const profileStore = useProfileStore();
 // Vars
 const isLazyLoading = ref(false);
 const error = ref("");
-const isEnd = ref("");
+const isEnd = ref(false);
 const endTrigger = ref(false);
-const target = ref(null);
+const target = useTemplateRef("target");
 const observer = shallowRef();
 
 // Handlers
-const callback = async (entries) => {
+const callback = async (entries: IntersectionObserverEntry[]) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
 			isLazyLoading.value = true;
@@ -23,11 +23,11 @@ const callback = async (entries) => {
 			try {
 				if (!isEnd.value) {
 					res = await profileStore.apiUsersGetPhotos(
-						localStorage.getItem("isAuth"),
+						localStorage.getItem("isAuth")!,
 						profileStore.pageTabPhotosIndex
 					);
 
-					if (!res.response.results.length) {
+					if (!res.response?.results.length) {
 						isEnd.value = true;
 					}
 

@@ -1,26 +1,23 @@
-<script setup>
-import { useProfileStore } from "@/stores/profile.js";
+<script setup lang="ts">
+import { useProfileStore } from "@/stores/profile.ts";
+import type { Component } from "vue";
+import type { ITabCount } from "@/types.ts";
 
 // Stores
 const profileStore = useProfileStore();
+
 // Vars
 const emit = defineEmits(["change-tab"]);
-const { titles, activeTab, content } = defineProps({
+const { titles, activeTab, content } = defineProps<{
 	titles: {
-		type: Array,
-		required: true,
-	},
-	content: {
-		type: Object,
-		required: true,
-	},
-	activeTab: {
-		type: Number,
-		default: 0,
-	},
-});
-// Handlers
-// Hooks
+		label: string;
+		name: string;
+		count: ITabCount;
+		icon: Component;
+	}[];
+	activeTab: number;
+	content: Component;
+}>();
 </script>
 
 <template>
@@ -30,7 +27,7 @@ const { titles, activeTab, content } = defineProps({
 		>
 			<li
 				v-for="(title, index) in titles"
-				:key="title"
+				:key="index"
 				@click="emit('change-tab', index)"
 				:class="[
 					'flex',
@@ -55,8 +52,8 @@ const { titles, activeTab, content } = defineProps({
 					{{ title.label }}
 				</span>
 				<span class="group-hover:text-body">
-					{{ profileStore.userInfo[title.count] }}</span
-				>
+					{{ profileStore.userInfo![title.count] }}
+				</span>
 			</li>
 		</ul>
 		<div>

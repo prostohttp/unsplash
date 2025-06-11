@@ -1,19 +1,18 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { UseImage } from "@vueuse/components";
-import { authRequest } from "@/api/unsplash.js";
-import { numWord } from "@/helpers/functions.js";
+import { numWord } from "@/helpers/functions.ts";
 import likeIcon from "~/svg/notifications-icon.svg";
 import { useProfileStore } from "@/stores/profile.js";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 // Stores
 const profileStore = useProfileStore();
 // Vars
 const route = useRoute();
 const router = useRouter();
-const api = authRequest();
-const photo = ref({});
+const photo = ref<Basic>();
 const error = ref("");
 const isLoading = ref(true);
 const isFull = ref(false);
@@ -23,7 +22,7 @@ const likeHandler = () => {
 };
 // Hooks
 onMounted(async () => {
-	if (profileStore.collectionsItem.length) {
+	if (profileStore.collectionsItem?.length) {
 		const collectionPhoto = profileStore.collectionsItem.find(
 			(photo) => photo.id === route.params.photo
 		);
@@ -42,14 +41,14 @@ onMounted(async () => {
 	<h1 v-if="error" class="text-[18px]">{{ error }}</h1>
 	<div v-else-if="isLoading">Загрузка...</div>
 	<div
-		v-else-if="photo.id"
+		v-else-if="photo"
 		class="mb-[12px] flex flex-col gap-[10px] py-[12px] text-[14px]"
 	>
 		<div class="overflow-hidden rounded-[3px]">
 			<UseImage
 				v-if="isFull"
 				:src="photo.urls.full"
-				:alt="photo.alt_description"
+				:alt="photo.alt_description!"
 				class="w-auto cursor-zoom-out rounded-[3px]"
 				@click="isFull = !isFull"
 			>
@@ -58,12 +57,12 @@ onMounted(async () => {
 						Загрузка фото...
 					</div>
 				</template>
-				<template #error> Ошибка загрузки фото </template>
+				<template #error> Ошибка загрузки фото</template>
 			</UseImage>
 			<img
 				v-else
 				:src="photo.urls.small"
-				:alt="photo.alt_description"
+				:alt="photo.alt_description!"
 				class="w-auto cursor-zoom-in rounded-[3px]"
 				@click="isFull = !isFull"
 			/>
@@ -86,4 +85,3 @@ onMounted(async () => {
 		</a>
 	</div>
 </template>
-@/helpers/functions.js

@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import logoSmall from "~/svg/logo-small.svg";
 import logoBig from "~/svg/logo-big.svg";
 import userPlaceholder from "~/svg/user-placeholder.svg";
-import { useProfileStore } from "@/stores/profile.js";
+import { useProfileStore } from "@/stores/profile.ts";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import HomeActive from "@/components/icons/HomeActive.vue";

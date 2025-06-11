@@ -1,10 +1,8 @@
-<script setup>
-import { useProfileStore } from "@/stores/profile.js";
-import { useRouter } from "vue-router";
+<script setup lang="ts">
+import { useProfileStore } from "@/stores/profile.ts";
 import AppLoginForm from "@/components/AppLoginForm.vue";
 
 const profileStore = useProfileStore();
-const router = useRouter();
 const logoutHandler = () => {
 	localStorage.removeItem("isAuth");
 	profileStore.resetState();
@@ -38,7 +36,9 @@ const logoutHandler = () => {
 			</router-link>
 
 			<div>
-				<a @click.prevent="logoutHandler" class="cursor-pointer text-blue"
+				<a
+					@click.prevent="logoutHandler"
+					class="cursor-pointer text-blue"
 					>Выйти</a
 				>
 			</div>
