@@ -1,7 +1,6 @@
-<script setup>
-import { onMounted, ref, shallowRef, watch } from "vue";
+<script setup lang="ts">
+import { onMounted, ref, shallowRef, useTemplateRef, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { authRequest } from "@/api/unsplash.js";
 import { useProfileStore } from "@/stores/profile.js";
 import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 
@@ -9,42 +8,45 @@ import AppPhotosGrid from "@/components/AppPhotosGrid.vue";
 const profileStore = useProfileStore();
 // Vars
 const error = ref("");
-const api = authRequest();
 const route = useRoute();
 const router = useRouter();
 const isLazyLoading = ref(false);
 const isEnd = ref("");
 const endTrigger = ref(false);
-const target = ref(null);
+const target = useTemplateRef("target");
 const observer = shallowRef();
 // Handlers
-const callback = async (entries) => {
+const callback = async (entries: IntersectionObserverEntry[]) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
 			try {
 				isLazyLoading.value = true;
-				const res = await api.collections.getPhotos({
-					collectionId: route.params.collectionId,
-					page: profileStore.pageCollectionIndex,
-					perPage: 10,
-				});
-				profileStore.pageCollectionIndex = profileStore.pageCollectionIndex + 1;
+
+				const res = await profileStore.apiCollectionsGetPhotos(
+					route.params.collectionId as string,
+					profileStore.pageCollectionIndex,
+					10
+				);
+
+				profileStore.pageCollectionIndex =
+					profileStore.pageCollectionIndex + 1;
+
 				if (res.errors) {
 					error.value = "Возникла ошибка";
 				} else if (
 					!res.response.results.length &&
-					!profileStore.collectionsItem.length
+					!profileStore.collectionsItem?.length
 				) {
 					error.value = "Нет фото или все фото по подписке";
 					endTrigger.value = true;
 				} else if (res.response.results.length) {
 					profileStore.setCollectionsItem([
-						...profileStore.collectionsItem,
+						...profileStore.collectionsItem!,
 						...res.response.results,
 					]);
 				} else if (
 					!res.response.results.length &&
-					profileStore.collectionsItem.length
+					profileStore.collectionsItem?.length
 				) {
 					endTrigger.value = true;
 					isEnd.value = "Фото больше нет";
@@ -95,7 +97,7 @@ onMounted(() => {
 		</a>
 		<div v-if="error" class="mb-[20px]">{{ error }}</div>
 		<div v-else>
-			<div class="gallery relative h-full" ref="root">
+			<div class="gallery relative h-full">
 				<AppPhotosGrid
 					:route="{
 						name: 'profile-collection-item-photo',
@@ -104,7 +106,9 @@ onMounted(() => {
 					}"
 					:items="profileStore.collectionsItem"
 				/>
-				<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
+				<div v-if="isLazyLoading" class="text-[14px]">
+					Загрузка фото...
+				</div>
 				<div v-if="isEnd" class="max-w-[1280px] text-center">
 					{{ isEnd }}
 				</div>

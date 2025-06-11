@@ -1,14 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import likeIcon from "~/svg/notifications-icon.svg";
-import { numWord } from "@/helpers/functions.js";
+import { numWord } from "@/helpers/functions.ts";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 // defines
-const { item } = defineProps({
-	item: {
-		type: Object,
-		required: true,
-	},
-});
+const { item } = defineProps<{
+	item: Basic;
+}>();
 
 // Handlers
 const likeHandler = () => {

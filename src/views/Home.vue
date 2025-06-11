@@ -1,15 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, shallowRef, watch } from "vue";
 import { useRoute } from "vue-router";
 import AppFeed from "@/components/AppFeed.vue";
-import { usePostStore } from "@/stores/post.js";
+import { usePostStore } from "@/stores/post.ts";
 import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 // Stores
 const postStore = usePostStore();
 
 // Vars
-const posts = ref([]);
+const posts = ref<Basic[]>([]);
 const error = ref("");
 const route = useRoute();
 const isEnd = ref(false);
@@ -20,7 +21,7 @@ const isLazyLoading = ref(false);
 const firstFeed = ref(true);
 
 // Handlers
-const callback = async (entries) => {
+const callback = async (entries: IntersectionObserverEntry[]) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
 			let res;
@@ -32,11 +33,11 @@ const callback = async (entries) => {
 				);
 
 				if (firstFeed.value) {
-					res = rawData.response.results;
+					res = rawData.response?.results;
 					firstFeed.value = false;
 				} else {
-					res = rawData.response.results.slice(1);
-					if (!res.length) {
+					res = rawData.response?.results.slice(1);
+					if (res && !res.length) {
 						isEnd.value = true;
 					}
 				}
@@ -44,7 +45,7 @@ const callback = async (entries) => {
 
 				if (rawData.errors) {
 					error.value = "Ошибка при загрузке ленты фотографий";
-				} else if (res.length) {
+				} else if (res && res.length) {
 					posts.value = [...posts.value, ...res];
 					postStore.setPosts(posts.value);
 				}
@@ -74,7 +75,11 @@ onMounted(() => {
 	<div class="flex iphone:gap-[50px]">
 		<div class="relative h-full min-w-[400px]">
 			<h2 v-if="error" class="text-center text-[22px]">{{ error }}</h2>
-			<AppFeed v-else :feeds="postStore.posts" :route-name="route.name" />
+			<AppFeed
+				v-else
+				:feeds="postStore.posts"
+				:route-name="route.name as string"
+			/>
 			<div v-if="isLazyLoading" class="text-[14px]">Загрузка фото...</div>
 			<div v-if="isEnd" class="max-w-[1280px] text-center">Фото нет</div>
 		</div>

@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
-import { useProfileStore } from "@/stores/profile.js";
+import { useProfileStore } from "@/stores/profile.ts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -24,17 +24,20 @@ const { handleSubmit } = useForm();
 // Handlers
 const loginHandler = handleSubmit(async () => {
 	if (login) {
-		const res = await profileStore.apiUsersGet(login.value);
+		const res = await profileStore.apiUsersGet(login.value as string);
 
 		if (res.errors) {
 			error.value = "Такого пользователя нет, попробуйте еще раз";
 		} else {
 			profileStore.setUser(res.response);
-			localStorage.setItem("isAuth", profileStore.userInfo.username);
-			await router.push({
-				name: "profile",
-				params: { user: profileStore.userInfo.username },
-			});
+			if (profileStore.userInfo) {
+				localStorage.setItem("isAuth", profileStore.userInfo.username);
+
+				await router.push({
+					name: "profile",
+					params: { user: profileStore.userInfo.username },
+				});
+			}
 		}
 	}
 });

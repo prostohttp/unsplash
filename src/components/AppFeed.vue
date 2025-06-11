@@ -1,29 +1,25 @@
-<script setup>
-// import mock from "@/api/mock.json";
+<script lang="ts" setup>
 import AppFeedItem from "@/components/AppFeedItem.vue";
-import { usePostStore } from "@/stores/post.js";
+import { usePostStore } from "@/stores/post.ts";
 import { onMounted } from "vue";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 // Stores
 const postStore = usePostStore();
 const { setRouteNameForHash } = postStore;
+
 // Vars
-const { feeds, routeName } = defineProps({
-	feeds: {
-		type: Array,
-		required: true,
-	},
-	routeName: {
-		type: String,
-		required: false,
-		default: "home",
-	},
-	routeQuery: {
-		required: false,
-	},
-});
+const { feeds, routeName } = defineProps<{
+	feeds: Basic[];
+	routeName?: string | null;
+	routeQuery?: string;
+}>();
+
+// Hooks
 onMounted(() => {
-	setRouteNameForHash(routeName);
+	if (routeName) {
+		setRouteNameForHash(routeName);
+	}
 });
 </script>
 

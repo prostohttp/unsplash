@@ -1,4 +1,4 @@
-export const getDateDiff = (now, before) => {
+export const getDateDiff = (now: string, before: string): string => {
 	const date1 = new Date(before);
 	const date2 = new Date(now);
 	const timeDiff = Math.abs(date2.getTime() - date1.getTime());
@@ -6,7 +6,7 @@ export const getDateDiff = (now, before) => {
 	return res ? `${res}д.` : "сегодня";
 };
 
-export const numWord = (value, words = ["лайк", "лайка", "лайков"]) => {
+export const numWord = (value: number, words = ["лайк", "лайка", "лайков"]) => {
 	value = Math.abs(value) % 100;
 	const num = value % 10;
 	if (value > 10 && value < 20) return words[2];

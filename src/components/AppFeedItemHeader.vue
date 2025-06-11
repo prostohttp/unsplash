@@ -1,13 +1,11 @@
-<script setup>
-import { getDateDiff } from "@/helpers/functions.js";
+<script setup lang="ts">
+import { getDateDiff } from "@/helpers/functions.ts";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 // defines
-const { item } = defineProps({
-	item: {
-		type: Object,
-		required: true,
-	},
-});
+const { item } = defineProps<{
+	item: Basic;
+}>();
 </script>
 
 <template>
@@ -35,7 +33,12 @@ const { item } = defineProps({
 			{{ item.user.username }}
 		</a>
 		<span class="text-dark-grey">
-			{{ getDateDiff(new Date(), new Date(item.created_at)) }}
+			{{
+				getDateDiff(
+					new Date().toString(),
+					new Date(item.created_at).toString()
+				)
+			}}
 		</span>
 	</div>
 </template>

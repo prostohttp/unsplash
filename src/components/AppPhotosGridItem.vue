@@ -1,20 +1,15 @@
-<script setup>
-//Stores
+<script setup lang="ts">
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
+
 //Vars
-
-const { item } = defineProps({
-	item: {
-		type: Object,
-		required: true,
-	},
+const { item, route } = defineProps<{
+	item: Basic;
 	route: {
-		type: Object,
-		required: true,
-	},
-});
-// Handlers
-
-// Hooks
+		name: string;
+		param: string;
+		tab?: string;
+	};
+}>();
 </script>
 
 <template>
@@ -32,7 +27,7 @@ const { item } = defineProps({
 	>
 		<img
 			:src="item.urls.small"
-			:alt="item.alt_description"
+			:alt="item.alt_description!"
 			class="w-full rounded-[3px]"
 		/>
 	</router-link>

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import Main from "@/layouts/Main.vue";
@@ -26,10 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div
-		class="flex h-lvh w-screen items-center justify-center"
-		v-if="loading"
-	>
+	<div class="flex h-lvh w-screen items-center justify-center" v-if="loading">
 		<img :src="logo" alt="Россграм" class="h-[60px]" />
 	</div>
 	<component :is="layout" v-else>

@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { useField } from "vee-validate";
 import { onMounted, ref, shallowRef, watch } from "vue";
 import { storeToRefs } from "pinia";
 import AppFeed from "@/components/AppFeed.vue";
 import { useRoute, useRouter } from "vue-router";
 import AppSearch from "@/components/AppSearch.vue";
-import { usePostStore } from "@/stores/post.js";
+import { usePostStore } from "@/stores/post.ts";
 import { useSearchStore } from "@/stores/search.js";
 import UserInfoBlock from "@/components/AppUserInfoBlock.vue";
 
@@ -15,6 +15,7 @@ const { setRouteQueryForHash } = postStore;
 const searchStore = useSearchStore();
 const { localSearchList } = storeToRefs(searchStore);
 const { setLocalSearchList } = searchStore;
+
 // Vars
 const route = useRoute();
 const router = useRouter();
@@ -25,13 +26,17 @@ const isEnd = ref(false);
 const endTrigger = ref(false);
 const target = ref(null);
 const observer = shallowRef();
+const querySearch = ref(route.query.s);
 
 // Handlers
 const initialSearchData = async () => {
 	isEnd.value = false;
-	if (route.query.s) {
+	if (querySearch.value) {
 		try {
-			const res = await searchStore.apiSearchGetPhotos(route.query.s, 1);
+			const res = await searchStore.apiSearchGetPhotos(
+				querySearch.value.toString(),
+				1
+			);
 
 			if (res.errors) {
 				error.value = "Возникла ошибка";
@@ -47,10 +52,10 @@ const initialSearchData = async () => {
 	}
 };
 
-const callback = async (entries) => {
+const callback = async (entries: IntersectionObserverEntry[]) => {
 	for (const { isIntersecting } of entries) {
 		if (isIntersecting) {
-			if (route.query.s) {
+			if (querySearch.value) {
 				let res;
 				try {
 					if (!isEnd.value) {
@@ -59,11 +64,11 @@ const callback = async (entries) => {
 						postStore.pageSearchIndex++;
 
 						res = await searchStore.apiSearchGetPhotos(
-							route.query.s,
+							querySearch.value.toString(),
 							postStore.pageSearchIndex
 						);
 
-						if (!res.response.results.length) {
+						if (!res.response?.results.length) {
 							isEnd.value = true;
 						}
 
@@ -87,10 +92,13 @@ const callback = async (entries) => {
 };
 
 const searchHandler = async () => {
-	if (route.query.s) {
+	if (querySearch.value) {
 		isEnd.value = false;
 		try {
-			const res = await searchStore.apiSearchGetPhotos(route.query.s, 1);
+			const res = await searchStore.apiSearchGetPhotos(
+				querySearch.value.toString(),
+				1
+			);
 
 			setLocalSearchList([]);
 			if (res.errors) {
@@ -110,21 +118,21 @@ const onSubmit = () => {
 	router.push({
 		name: "search",
 		query: {
-			s: searchValue.value,
+			s: searchValue.value as string,
 		},
 	});
 };
 
 // Hooks
 onMounted(async () => {
-	searchValue.value = route.query.s;
+	searchValue.value = querySearch.value;
 	await initialSearchData();
 	observer.value = new IntersectionObserver(callback, {
 		threshold: 0,
 	});
 	observer.value.observe(target.value);
-	if (route.query.s) {
-		setRouteQueryForHash(route.query.s);
+	if (querySearch.value) {
+		setRouteQueryForHash(querySearch.value.toString());
 	} else {
 		setLocalSearchList([]);
 	}
@@ -132,16 +140,19 @@ onMounted(async () => {
 
 watch(
 	() => route.query.s,
-	async () => {
-		const searchQuery = route.query.s;
-		searchValue.value = searchQuery;
-
-		await searchHandler();
-		if (searchQuery) {
-			setRouteQueryForHash(searchQuery);
-		}
+	(newValue) => {
+		querySearch.value = newValue;
 	}
 );
+
+watch(querySearch, async () => {
+	searchValue.value = querySearch.value;
+
+	await searchHandler();
+	if (querySearch.value) {
+		setRouteQueryForHash(querySearch.value.toString());
+	}
+});
 
 watch(endTrigger, () => {
 	if (endTrigger.value) {
@@ -165,8 +176,8 @@ watch(endTrigger, () => {
 			<AppFeed
 				v-if="localSearchList.length"
 				:feeds="localSearchList"
-				:route-name="route.name"
-				:route-query="route.query.s || null"
+				:route-name="route.name?.toString()"
+				:route-query="querySearch?.toString()"
 				class="iphone:mt-[50px]"
 			/>
 			<div v-else class="mt-[50px] text-center text-[22px]">

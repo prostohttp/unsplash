@@ -1,3 +1,8 @@
+import type {
+	RouteLocationNormalized,
+	RouteLocationNormalizedLoaded,
+} from "vue-router";
+
 export const routes = [
 	{
 		path: "/",
@@ -70,15 +75,17 @@ export const routes = [
 		meta: {
 			layout: "FullWidth",
 		},
-		beforeEnter(to, from, next) {
+		beforeEnter(
+			to: RouteLocationNormalized,
+			from: RouteLocationNormalizedLoaded
+		) {
 			if (localStorage.getItem("isAuth")) {
-				next({
+				return {
 					name: "profile",
 					params: { user: localStorage.getItem("isAuth") },
-				});
-			} else {
-				next();
+				};
 			}
+			return true;
 		},
 	},
 	{
@@ -88,11 +95,14 @@ export const routes = [
 		meta: {
 			layout: "FullWidth",
 		},
-		beforeEnter(to, from, next) {
+		beforeEnter(
+			to: RouteLocationNormalized,
+			from: RouteLocationNormalizedLoaded
+		) {
 			if (!localStorage.getItem("isAuth")) {
-				next({ name: "auth" });
+				return { name: "auth" };
 			} else {
-				next();
+				return true;
 			}
 		},
 	},

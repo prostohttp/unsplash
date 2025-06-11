@@ -1,15 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import AppFeedItemHeader from "@/components/AppFeedItemHeader.vue";
 import AppFeedItemBody from "@/components/AppFeedItemBody.vue";
 import AppFeedItemFooter from "@/components/AppFeedItemFooter.vue";
+import type { Basic } from "unsplash-js/dist/methods/photos/types";
 
 // vars
-const { item } = defineProps({
-	item: {
-		type: Object,
-		required: true,
-	},
-});
+const { item } = defineProps<{
+	item: Basic;
+}>();
 </script>
 
 <template>
