@@ -22,7 +22,7 @@ const tabTitles: ITab[] = [
 	{
 		label: "Фото",
 		name: "tab-photos",
-		count: ITabCount["total-photos"],
+		count: ITabCount["total_photos"],
 		icon: TotalPhotos,
 	},
 	{
