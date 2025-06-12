@@ -7,7 +7,9 @@ import type { ITabCount } from "@/types.ts";
 const profileStore = useProfileStore();
 
 // Vars
-const emit = defineEmits(["change-tab"]);
+const emit = defineEmits<{
+	"change-tab": [index: number];
+}>();
 const { titles, activeTab, content } = defineProps<{
 	titles: {
 		label: string;
